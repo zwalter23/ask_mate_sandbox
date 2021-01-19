@@ -1,0 +1,14 @@
+id,submission_time,vote_number,question_id,message,image
+1,06/01/2021 12:09:07,0,1,Yes! Python is a case sensitive programming language.,
+2,06/01/2021 12:11:49,0,2,"
+
+Python has five standard data types: Numbers, String, List, Tuple, Dictionary
+
+",
+3,06/01/2021 12:12:52,0,3,"A tuple is another sequence data type that is similar to the list. A tuple consists of a number of values separated by commas. Unlike lists, however, tuples are enclosed within parentheses.",
+4,06/01/2021 12:13:33,0,4,"Python's dictionaries are kind of hash table type. They work like associative arrays or hashes found in Perl and consist of key-value pairs. A dictionary key can be almost any Python type, but are usually numbers or strings. Values, on the other hand, can be any arbitrary Python object.",
+5,06/01/2021 12:14:24,3,5,"Using dictionary.values() function, we can get all the values from the dictionary object.",
+6,06/01/2021 12:14:59,0,6,str(x) − Converts object x to a string representation.,
+7,07/01/2021 15:03:30,0,9,Test answer,id7tree-736885_1280.jpg
+8,07/01/2021 15:03:48,0,9,New answer,id8berries-2277_1920.jpg
+9,08/01/2021 09:25:00,0,10,New answer,id9buddha-219885_1280.jpg

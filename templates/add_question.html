@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add question</title>
+    <style>
+        bgc
+    </style>
+    
+</head>
+<body bgcolor="55555">
+<div>
+    <form action="/save" method="post" enctype="multipart/form-data">
+            <h2>Add question</h2>
+            <fieldset class="fill-area">
+                <legend><label for="title">Title</label></legend>
+                <textarea name="title" rows="5" cols="100"></textarea>
+            </fieldset>
+            <fieldset class="fill-area">
+                <legend><label for="message">Question</label></legend>
+                <textarea name="message" rows="10" cols="100"></textarea>
+                <input type="file" name="file" id="picture"/>
+            </fieldset>
+                <button type="submit">Submit question</button>
+                <a class="home-button" href="/">Go Back</a>
+    </form>
+</div>
+</body>
+</html>

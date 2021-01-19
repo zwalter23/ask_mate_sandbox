@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Question</title>
+
+    </head>
+
+    <body bgcolor="55555">
+        <fieldset class="block">
+            <div align="center">
+                <fieldset class="fill-area">
+                    {% for quest in question %}
+                        {% if quest["id"] == id %}
+                    <legend align="center"><u><h1><b>{{ quest["title"] }}</b></h1></u></legend>
+                    <h3>{{ quest["message"] }}</h3>
+                    <p><img alt="{{ quest['image'] }}" src="/static/img/question/{{ quest['image'] }}" style="height:300px"></p>
+                </fieldset>
+            </div>
+                        {% for answ in answer %}
+                            {% if answ["question_id"] == id %}
+                        <fieldset>
+                            <div align="right" style="color:white;">
+                                <button onclick="window.location.href='/answer/{{ answ['id'] }}/vote_down/{{ quest['id'] }}';" class="button button1" type="submit" style="color: white; background-color: #820000;">&#9660</button>
+                                <button onclick="window.location.href='/answer/{{ answ['id'] }}/vote_up/{{ quest['id'] }}';" class="button button2" type="submit" style="color: white; background-color: #149000;">&#9650</button>
+                                Votes: {{ answ["vote_number"] }}
+                            </div>
+                        <p>{{ answ["message"] }}</p><br>
+                                {% if answ["image"] %}
+                                <p><img src="/static/img/answer/{{ answ['image'] }}" style="width:200px"></p>
+                                {% endif %}
+                            <button onclick="window.location.href='/answer/{{ answ['id'] }}/delete/{{ quest['id'] }}';">Delete answer</button>
+                        </fieldset>
+
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    {% endfor %}
+            <div class="container">
+                <br>
+                    <button onclick="window.location.href='/question/{{id}}/new-answer';">New answer</button>
+                    <button onclick="window.location.href='/question/{{id}}/edit';">Edit question</button>
+                    <p align="right"><button onclick="window.location.href='/question/{{id}}/delete';">Delete question</button></p>
+            </div>
+        </fieldset>
+        <button onclick="window.location.href='/';">Go Back</button>
+    </body>
+</html>

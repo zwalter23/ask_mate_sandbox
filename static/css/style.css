@@ -1,0 +1,125 @@
+body {
+    width: 1300px;
+    margin: auto;
+    display: flex;
+    background-color: #222;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+legend {
+    color: white;
+    font-size: 30px;
+}
+
+a {
+    color: inherit;
+}
+
+fieldset {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin-left: 100px;
+    margin-right: 100px;
+}
+
+p {
+    font-size: 20px;
+    color: white;
+}
+
+.page-title {
+    margin-top: 50px;
+    text-align: center;
+    font-size: 50px;
+    color: white;
+
+}
+
+
+li{
+    font-size: 20px;
+    color: white;
+    margin-bottom: 20px;
+}
+
+form {
+    margin: auto;
+}
+
+.block {
+    margin: 50px auto ;
+}
+
+.fill-area {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 50px;
+}
+
+#add-question {
+    position: fixed;
+    right: 40px;
+    top: 70px;
+}
+
+button {
+    text-shadow: none;
+    border-style: none;
+    text-decoration: none;
+    height: 50px;
+    border-radius: 10px;
+    background-color: white;
+    color: #222;
+    text-align: center;
+    font-weight: bold;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.home-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    padding: 16px; 
+    line-height: 30px;
+    text-shadow: none;
+    border-style: none;
+    text-decoration: none;
+    border-radius: 10px;
+    background-color: white;
+    color: #222;
+    text-align: center;
+    font-weight: bold;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.button {
+    padding: 16px;
+    text-shadow: none;
+    border-style: none;
+    text-decoration: none;
+    height: 50px;
+    border-radius: 10px;
+    background-color: white;
+    color: #222;
+    text-align: center;
+    font-weight: bold;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.container {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 30px;
+}
+
+.card-holder {
+    display: flex;
+    justify-content: space-between;
+}
+
+textarea {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+
+}
