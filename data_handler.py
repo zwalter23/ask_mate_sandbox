@@ -1,41 +1,64 @@
 import csv
 import os
 import re
+from typing import List, Dict
 
+from psycopg2 import sql
+from psycopg2.extras import RealDictCursor
+import random
+import connect_database
 #id,submission_time,view_number,vote_number,title,message,image
 fieldnames_q = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
 fieldnames_a = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
 ALLOWED_EXTENSIONS = {'png', 'jpg'}
 
-def writer(data, file, x):
-    if file == "sample_data/question.csv":
-        fieldnames = fieldnames_q
-    else:
-        fieldnames = fieldnames_a
-    writer = csv.DictWriter(open(file, x), fieldnames=fieldnames)
-    if x == "w":
-        writer.writeheader()
-        for row in data:
-            writer.writerow(row)
-    else:
-        writer.writerow(data)
+@connect_database.connection_handler
+def writer(cursor: RealDictCursor, data, file):
+    keys = [key for key in data]
+    print("DATACHECK : ", keys)
+    cursor.execute(f"""INSERT INTO {file}
+        VALUES ("{data['id']}","{data['submission_time']}",{data['vote_number']},{data['question_id']},"{data['message']}","{data['image']}")
+    """)
+
+# def writer(data, file, x):
+#     if file == "sample_data/question.csv":
+#         fieldnames = fieldnames_q
+#     else:
+#         fieldnames = fieldnames_a
+#     writer = csv.DictWriter(open(file, x), fieldnames=fieldnames)
+#     if x == "w":
+#         writer.writeheader()
+#         for row in data:
+#             writer.writerow(row)
+#     else:
+#         writer.writerow(data)
+
+@connect_database.connection_handler
+def reader(cursor: RealDictCursor, data):
+    cursor.execute(f"SELECT * FROM {data}")
+    return cursor.fetchall()
+# def reader(csv_file):
+#     reader = csv.DictReader(open(csv_file))
+#     return reader
 
 
-def reader(csv_file):
-    reader = csv.DictReader(open(csv_file))
-    return reader
-
-
-def edit(data, file):
+@connect_database.connection_handler
+def edit(cursor:RealDictCursor, data, file):
     read = reader(file)
-    new = []
-    for row in read:
-        if data["id"] != row["id"]:
-            new.append(row)
-        else:
-            row.update(data)    #update the edited row/question
-            new.append(row)
-    writer(new, file, "w")
+    cursor.execute(f"""UPDATE {file} 
+        SET title = {data['title']}, message = {data['message']}
+        WHERE id = {data['id']}
+    """)
+# def edit(data, file):
+#     read = reader(file)
+#     new = []
+#     for row in read:
+#         if data["id"] != row["id"]:
+#             new.append(row)
+#         else:
+#             row.update(data)    #update the edited row/question
+#             new.append(row)
+#     writer(new, file, "w")
 
 
 def delete_answer(answer_id):
@@ -92,7 +115,7 @@ def sort(x):
     d = re.split("=|&", x)[3]
     y = re.split("=|&", x)[1]
     print("sorter:",x, d)
-    questions = reader("sample_data/question.csv")
+    questions = reader("question")
     questions = list(questions)
     try:
         lst = sorted(questions, key = lambda i: int(i[y]))
