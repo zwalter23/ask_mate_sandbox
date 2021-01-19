@@ -61,7 +61,7 @@ def save_answer(question_id):
         if f:
             f.filename = "id"+str(id)+f.filename
             f.save(os.path.join(app.config['UPLOAD_FOLDER'], "answer", f.filename))
-        new_answer = {"id": id, "submission_time": datetime.now().strftime("%d/%m/%Y %H:%M:%S"), "vote_number": 0,
+        new_answer = {"id": id, "submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "vote_number": 0,
                       "question_id": question_id, "message": answer, "image": f.filename}
         data_handler.writer(new_answer, "answer")
     return redirect(f"/question/{question_id}")
@@ -77,9 +77,9 @@ def save():
         if f:
             f.filename = "id"+str(id)+f.filename
             f.save(os.path.join(app.config['UPLOAD_FOLDER'],"question", f.filename))
-        question = {"id": id, "submission_time": datetime.now().strftime("%d/%m/%Y %H:%M:%S"), "view_number": 0,
+        question = {"id": id, "submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "view_number": 0,
                     "vote_number": 0, "title": title, "message": message, "image": f.filename}
-        data_handler.writer(question, "question", "a")
+        data_handler.writer(question, "question")
     return redirect(f"/question/{id}")
 
 
@@ -91,7 +91,7 @@ def file_upload():
 @app.route("/question/<question_id>/edit")
 def edit_question(question_id):
     question = data_handler.reader("question")
-    return  render_template("edit.html", question = question, id = question_id)
+    return  render_template("edit.html", question = question, id = int(question_id))
 
 
 @app.route("/edit/<id>", methods=["GET", "POST"])
@@ -99,7 +99,7 @@ def edit_quest(id):
     title = request.form["title"]
     message = request.form["message"]
     question = {"id": id, "title": title, "message": message}
-    data_handler.edit(question, "question")
+    data_handler.edit_question(question)
     return redirect(f"/question/{id}")
 
 
@@ -161,7 +161,6 @@ def answer_vote_up(answer_id, question_id):
 def sort():
      sorting = request.query_string
      sorting = sorting.decode()
-     # x = request.form["sort"]  # if select sort
      sorted = data_handler.sort(sorting)
      return render_template("list.html", questions=sorted)
 

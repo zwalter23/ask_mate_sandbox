@@ -14,7 +14,9 @@
                         {% if quest["id"] == id %}
                     <legend align="center"><u><h1><b>{{ quest["title"] }}</b></h1></u></legend>
                     <h3>{{ quest["message"] }}</h3>
+                        {% if quest["image"] %}
                     <p><img alt="{{ quest['image'] }}" src="/static/img/question/{{ quest['image'] }}" style="height:300px"></p>
+                        {% endif %}
                 </fieldset>
             </div>
                         {% for answ in answer %}
