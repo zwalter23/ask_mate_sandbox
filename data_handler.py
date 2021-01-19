@@ -17,7 +17,7 @@ def writer(cursor: RealDictCursor, data, file):
     keys = [key for key in data]
     print("DATACHECK : ", keys)
     cursor.execute(f"""INSERT INTO {file}
-        VALUES ("{data['id']}","{data['submission_time']}",{data['vote_number']},{data['question_id']},"{data['message']}","{data['image']}")
+        VALUES ({data['id']},'{data['submission_time']}',{data['vote_number']},{data['question_id']},'{data['message']}','{data['image']}')
     """)
 
 # def writer(data, file, x):
