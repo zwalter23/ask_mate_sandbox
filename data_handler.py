@@ -40,8 +40,8 @@ def writer(cursor: RealDictCursor, data, table):
 
 
 @connect_database.connection_handler
-def reader(cursor: RealDictCursor, data):
-    cursor.execute(f"SELECT * FROM {data} ORDER BY id DESC")
+def reader(cursor: RealDictCursor, table):
+    cursor.execute(f"SELECT * FROM {table} ORDER BY id DESC")
     return cursor.fetchall()
 
 
@@ -75,6 +75,7 @@ def view_count(cursor:RealDictCursor, id):
                 SET view_number = view_number + 1
                 WHERE id = '{id}'
                     """)
+
 
 @connect_database.connection_handler
 def edit(cursor:RealDictCursor, id, modify):
@@ -138,11 +139,11 @@ def delete(cursor:RealDictCursor, id):
     cursor.execute(f"SELECT id FROM answer WHERE question_id = {id}")
     answer_id = cursor.fetchall()
     if answer_id:
+        print("DATACHECK", answer_id)
         for i in range(len(answer_id)):
-            answer_id = [num for num in answer_id][i]['id']
-            print("DATACHECK: ", answer_id)
-            cursor.execute(f"DELETE FROM comment WHERE answer_id = {answer_id}")
-            delete_answer(answer_id)
+            ans_id = [num for num in answer_id][i]['id']
+            print("DATACHECK: ", ans_id)
+            delete_answer(ans_id)
     cursor.execute(f"DELETE FROM question  WHERE id = {id}")
 
 
@@ -151,32 +152,14 @@ def delete_comment(cursor: RealDictCursor, id):
     cursor.execute(f"DELETE FROM comment WHERE id = {id}")
 
 
+@connect_database.connection_handler
+def sort(cursor: RealDictCursor, x):
+    d = re.split("=|&", x)[3]
+    y = re.split("=|&", x)[1]
+    cursor.execute(f"SELECT * FROM question ORDER BY {y} {d.upper()}")
+    return cursor.fetchall()
+
+
 def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-def id_generator(file):
-    id = 1
-    read = reader(file)
-    for row in read:
-        if row:
-            id = int(row["id"]) + 1
-    return id
-
-
-def sort(x):
-    d = re.split("=|&", x)[3]
-    y = re.split("=|&", x)[1]
-    print("sorter:",x, d)
-    questions = reader("question")
-    questions = list(questions)
-    try:
-        lst = sorted(questions, key = lambda i: int(i[y]))
-    except:
-        lst = sorted(questions, key=lambda i: i[y].lower())
-    if d == "down":
-        lst = lst[::-1]
-    for row in lst:
-        print(row)
-    return lst

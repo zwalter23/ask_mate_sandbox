@@ -53,7 +53,6 @@ def new_answer(question_id):
 @app.route("/save_answer/<question_id>", methods=["GET", "POST"])
 def save_answer(question_id):
     if request.method == "POST":
-        id = data_handler.id_generator("answer")
         answer = request.form["answer"]
         f = request.files["file"]
         if f:
@@ -68,7 +67,6 @@ def save_answer(question_id):
 @app.route("/save", methods=["GET", "POST"])
 def save():
     if request.method == "POST":
-        id = data_handler.id_generator("question")
         title = request.form["title"]
         message = request.form["message"]
         f = request.files["file"]
