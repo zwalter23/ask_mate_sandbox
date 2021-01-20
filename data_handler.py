@@ -26,15 +26,15 @@ def writer(cursor: RealDictCursor, data, table):
         values = (data['submission_time'], data['vote_number'], data['question_id'], data['message'], data['image'])
     elif table == 'comment':
         if data['question_id'] == 'NULL':
-            query = f"""INSERT INTO comment
+            query = f"""INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count)
                            VALUES(NULL, %s, %s, %s, %s)"""
-            values = (data['answer_id'], data['message'], data['submission_time'],
+            values = (int(data['answer_id']), data['message'], data['submission_time'],
                       data['edited_count'])
         else:
             print(data)
-            query = f"""INSERT INTO comment
+            query = f"""INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count)
                            VALUES(%s, NULL, %s, %s, %s)"""
-            values = (data['question_id'], data['message'], data['submission_time'],
+            values = (int(data['question_id']), data['message'], data['submission_time'],
                       data['edited_count'])
     cursor.execute(query, values)
 
@@ -134,20 +134,21 @@ def delete(cursor:RealDictCursor, id):
             os.remove(f"static/img/question/{quest_img}")
     except:
         print("No image")
-    cursor.execute("DELETE FROM comment WHERE question_id = %s", id)
-    cursor.execute("SELECT id FROM answer WHERE question_id = %s", id)
+    cursor.execute(f"DELETE FROM comment WHERE question_id = {id}")
+    cursor.execute(f"SELECT id FROM answer WHERE question_id = {id}")
     answer_id = cursor.fetchall()
     if answer_id:
         for i in range(len(answer_id)):
             answer_id = [num for num in answer_id][i]['id']
             print("DATACHECK: ", answer_id)
-            cursor.execute("DELETE FROM comment WHERE answer_id = %s", answer_id)
-    cursor.execute("DELETE FROM question  WHERE id = %s", id)
+            cursor.execute(f"DELETE FROM comment WHERE answer_id = {answer_id}")
+            delete_answer(answer_id)
+    cursor.execute(f"DELETE FROM question  WHERE id = {id}")
 
 
 @connect_database.connection_handler
 def delete_comment(cursor: RealDictCursor, id):
-    cursor.execute("DELETE FROM comment WHERE id = %s", id)
+    cursor.execute(f"DELETE FROM comment WHERE id = {id}")
 
 
 def allowed_file(filename):

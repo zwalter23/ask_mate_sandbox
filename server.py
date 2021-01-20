@@ -78,7 +78,7 @@ def save():
         question = {"submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "view_number": 0,
                     "vote_number": 0, "title": title, "message": message, "image": f.filename}
         data_handler.writer(question, "question")
-    return redirect(f"/question/{id}")
+    return redirect(f"/question/{data_handler.reader('question')[0]['id']}")
 
 
 @app.route("/question/<question_id>/edit")
@@ -154,7 +154,7 @@ def add_question_comment(question_id):
 def add_answer_comment(answer_id, question_id):
     if request.method == "POST":
         comment = request.form.get('comment')
-        data = {"question_id": "NULL", "answer_id": answer_id, "message": comment,
+        data = {"question_id": 'NULL', "answer_id": answer_id, "message": comment,
                 "submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "edited_count": 0}
         data_handler.writer(data, "comment")
         return redirect(f"/question/{question_id}")
