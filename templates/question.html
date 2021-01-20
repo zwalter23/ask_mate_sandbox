@@ -14,7 +14,17 @@
                         {% if quest["id"] == id %}
                     <legend align="center"><u><h1><b>{{ quest["title"] }}</b></h1></u></legend>
                     <h3>{{ quest["message"] }}</h3>
-                        {% if quest["image"] %}
+                    <button onclick="window.location.href='/add_comment/{{ quest['id'] }}';" type="submit">Add comment</button>
+                    {% for comm in comment %}
+                    {% if comm["question_id"] == id %}
+                    <p>Comment: {{ comm['message'] }}
+                    <button onclick="window.location.href='/comment/{{ comm['id'] }}/delete/{{ quest['id'] }}';" type="submit">DEL</button>
+                    <button onclick="window.location.href='/comment/{{ comm['id'] }}/edit/{{ quest['id'] }}';" type="submit">EDIT</button>
+                    </p>
+
+                    {% endif %}
+                    {% endfor %}
+                        {% if quest['image'] %}
                     <p><img alt="{{ quest['image'] }}" src="/static/img/question/{{ quest['image'] }}" style="height:300px"></p>
                         {% endif %}
                 </fieldset>
@@ -28,6 +38,15 @@
                                 Votes: {{ answ["vote_number"] }}
                             </div>
                         <p>{{ answ["message"] }}</p><br>
+                        <button onclick="window.location.href='/comment/{{ answ['id'] }}/add/{{ quest['id'] }}';" type="submit">Add comment</button>
+                            {% for comm in comment %}
+                            {% if comm["answer_id"] == answ["id"] %}
+                            <p>Comment: {{ comm['message'] }}
+                            <button onclick="window.location.href='/comment/{{ comm['id'] }}/delete/{{ quest['id'] }}';" type="submit">DEL</button>
+                            <button onclick="window.location.href='/comment/{{ comm['id'] }}/edit/{{ quest['id'] }}';" type="submit">EDIT</button>
+                            </p>
+                            {% endif %}
+                            {% endfor %}
                                 {% if answ["image"] %}
                                 <p><img src="/static/img/answer/{{ answ['image'] }}" style="width:200px"></p>
                                 {% endif %}
