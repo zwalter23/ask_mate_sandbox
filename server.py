@@ -11,15 +11,23 @@ ALLOWED_EXTENSIONS = {'png', 'jpg'}
 
 
 @app.route("/list")
-def list_default():
-    question = data_handler.reader("question")
-    return render_template("list.html", questions=question)
-
+def list():
+        question = data_handler.reader("question")
+        quest = []
+        a = [x for x in question]
+        for row in a[::-1]:
+            quest.append(row)
+        return render_template("list.html", questions=quest)
 
 @app.route("/")
-def list_last_5():
-    question = data_handler.reader("question")[:5]
-    return render_template("list.html", questions=question)
+def list2():
+        question = data_handler.reader("question")
+        quest = []
+        a = [x for x in question]
+        for row in a[::-1]:
+            quest.append(row)
+        quest = quest [:5]
+        return render_template("list.html", questions=quest)
 
 
 @app.route("/visitor/<question_id>")
@@ -32,8 +40,9 @@ def visitor(question_id):
 def quest(question_id):
     question = data_handler.reader("question")
     answer = data_handler.reader("answer")
+    comment = data_handler.reader("comment")
     print(question_id, [x['id'] for x in question])
-    return render_template("question.html", question = question, answer = answer, id = int(question_id))
+    return render_template("question.html", question = question, answer = answer, comment = comment, id = int(question_id))
 
 
 @app.route("/add-question", methods=["GET", "POST"])
@@ -52,35 +61,32 @@ def new_answer(question_id):
 @app.route("/save_answer/<question_id>", methods=["GET", "POST"])
 def save_answer(question_id):
     if request.method == "POST":
+        id = data_handler.id_generator("answer")
         answer = request.form["answer"]
         f = request.files["file"]
         if f:
             f.filename = "id"+str(id)+f.filename
             f.save(os.path.join(app.config['UPLOAD_FOLDER'], "answer", f.filename))
-        new_answer = {"submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "vote_number": 0,
+        new_answer = {"id": id, "submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "vote_number": 0,
                       "question_id": question_id, "message": answer, "image": f.filename}
         data_handler.writer(new_answer, "answer")
-    return redirect(f"/question/{data_handler.reader('question')[0]['id']}")
+    return redirect(f"/question/{question_id}")
 
 
 @app.route("/save", methods=["GET", "POST"])
 def save():
     if request.method == "POST":
+        id = data_handler.id_generator("question")
         title = request.form["title"]
         message = request.form["message"]
         f = request.files["file"]
         if f:
             f.filename = "id"+str(id)+f.filename
             f.save(os.path.join(app.config['UPLOAD_FOLDER'],"question", f.filename))
-        question = {"submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "view_number": 0,
+        question = {"id": id, "submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "view_number": 0,
                     "vote_number": 0, "title": title, "message": message, "image": f.filename}
         data_handler.writer(question, "question")
-    return redirect(f"/question/{data_handler.reader('question')[0]['id']}")
-
-
-@app.route("/file_upload", methods=["GET", "POST"])
-def file_upload():
-    return render_template("file_upload.html")
+    return redirect(f"/question/{id}")
 
 
 @app.route("/question/<question_id>/edit")
@@ -123,13 +129,22 @@ def vote_up(question_id):
 
 @app.route("/answer/<answer_id>/vote_down/<question_id>", methods=["GET", "POST"])
 def answer_vote_down(answer_id, question_id):
-    data_handler.edit_answer(answer_id,"downvote")
+    answer = data_handler.reader("answer")
+    for row in answer:
+        if row["id"] == answer_id:
+            if int(row["vote_number"]) > 0:
+                row["vote_number"] = int(row["vote_number"]) - 1
+                data_handler.edit(row, "answer")
     return redirect(f"/question/{question_id}")
 
 
 @app.route("/answer/<answer_id>/vote_up/<question_id>", methods=["GET", "POST"])
 def answer_vote_up(answer_id, question_id):
-    data_handler.edit_answer(answer_id,"upvote")
+    answer = data_handler.reader("answer")
+    for row in answer:
+        if row["id"] == answer_id:
+            row["vote_number"] = int(row["vote_number"]) + 1
+            data_handler.edit(row, "answer")
     return redirect(f"/question/{question_id}")
 
 
@@ -140,6 +155,43 @@ def sort():
      sorted = data_handler.sort(sorting)
      return render_template("list.html", questions=sorted)
 
+
+@app.route("/comment/<question_id>/add", methods=["GET", "POST"])
+def add_question_comment(question_id):
+    if request.method == "POST":
+        comment = request.form.get('comment')
+        data = {"id": data_handler.id_generator("comment"), "question_id": question_id, "message": comment,
+                "submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "edited_count": 0}
+        data_handler.writer(data, "comment")
+        return redirect(f"/question/{question_id}")
+    return render_template("add_comment.html", id=int(question_id))
+
+
+@app.route("/comment/<answer_id>/add/<question_id>", methods=["GET", "POST"])
+def add_answer_comment(answer_id, question_id):
+    if request.method == "POST":
+        comment = request.form.get('comment')
+        data = {"id": data_handler.id_generator("comment"), "question_id": "NULL", "answer_id": answer_id, "message": comment,
+                "submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "edited_count": 0}
+        data_handler.writer(data, "comment")
+        return redirect(f"/question/{question_id}")
+    return render_template("add_answer_comment.html", question_id=question_id, answer_id=answer_id)
+
+
+@app.route("/comment/<comment_id>/delete/<question_id>")
+def delete_comment(comment_id, question_id):
+    data_handler.delete_comment(comment_id)
+    return redirect(f"/question/{question_id}")
+
+
+@app.route("/comment/<comment_id>/edit/<question_id>", methods=["GET", "POST"])
+def edit_comment(comment_id, question_id):
+    if request.method == "POST":
+        comment = request.form.get("comment")
+        data_handler.edit_comment({"id":comment_id, "message":comment})
+        return redirect(f"/question/{question_id}")
+    comment = data_handler.reader("comment")
+    return render_template("edit_comment.html", comment=comment, comment_id=int(comment_id), question_id=question_id)
 
 if __name__ == "__main__":
     app.run(debug=True)
