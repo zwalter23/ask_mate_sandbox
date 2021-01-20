@@ -11,13 +11,22 @@ ALLOWED_EXTENSIONS = {'png', 'jpg'}
 
 
 @app.route("/list")
-@app.route("/")
 def list():
         question = data_handler.reader("question")
         quest = []
         a = [x for x in question]
         for row in a[::-1]:
             quest.append(row)
+        return render_template("list.html", questions=quest)
+
+@app.route("/")
+def list2():
+        question = data_handler.reader("question")
+        quest = []
+        a = [x for x in question]
+        for row in a[::-1]:
+            quest.append(row)
+        quest = quest [:5]
         return render_template("list.html", questions=quest)
 
 
@@ -119,7 +128,7 @@ def delete_answer(answer_id, question_id):
 def vote_down(question_id):
     question = data_handler.reader("question")
     for row in question:
-        if row["id"] == question_id:
+        if row["id"] == int(question_id):
             if int(row["vote_number"]) > 0:
                 row["vote_number"] = int(row["vote_number"]) - 1
                 data_handler.edit(row, "question")
