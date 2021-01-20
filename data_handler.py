@@ -16,32 +16,32 @@ ALLOWED_EXTENSIONS = {'png', 'jpg'}
 @connect_database.connection_handler
 def writer(cursor: RealDictCursor, data, table):
     if table == 'question':
-        query = f"""INSERT INTO question (id, submission_time, view_number, vote_number, title, message, image)
-                       VALUES (%s, %s, %s, %s, %s, %s, %s)"""
-        values = (data['id'], data['submission_time'], data['view_number'], data['vote_number'], data['title'],
+        query = f"""INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
+                       VALUES (%s, %s, %s, %s, %s, %s)"""
+        values = (data['submission_time'], data['view_number'], data['vote_number'], data['title'],
                 data['message'], data['image'])
     elif table == 'answer':
-        query = f"""INSERT INTO answer (id, submission_time, vote_number, question_id, message, image)
-                       VALUES(%s, %s, %s, %s, %s, %s)"""
-        values = (data['id'], data['submission_time'], data['vote_number'], data['question_id'], data['message'], data['image'])
+        query = f"""INSERT INTO answer (submission_time, vote_number, question_id, message, image)
+                       VALUES(%s, %s, %s, %s, %s)"""
+        values = (data['submission_time'], data['vote_number'], data['question_id'], data['message'], data['image'])
     elif table == 'comment':
         if data['question_id'] == 'NULL':
             query = f"""INSERT INTO comment
-                           VALUES(%s, NULL, %s, %s, %s, %s)"""
-            values = (data['id'], data['answer_id'], data['message'], data['submission_time'],
+                           VALUES(NULL, %s, %s, %s, %s)"""
+            values = (data['answer_id'], data['message'], data['submission_time'],
                       data['edited_count'])
         else:
             print(data)
             query = f"""INSERT INTO comment
-                           VALUES(%s, %s, NULL, %s, %s, %s)"""
-            values = (data['id'], data['question_id'], data['message'], data['submission_time'],
+                           VALUES(%s, NULL, %s, %s, %s)"""
+            values = (data['question_id'], data['message'], data['submission_time'],
                       data['edited_count'])
     cursor.execute(query, values)
 
 
 @connect_database.connection_handler
 def reader(cursor: RealDictCursor, data):
-    cursor.execute(f"SELECT * FROM {data}")
+    cursor.execute(f"SELECT * FROM {data} ORDER BY id DESC")
     return cursor.fetchall()
 
 
@@ -70,6 +70,13 @@ def edit_comment(cursor:RealDictCursor, data):
 
 
 @connect_database.connection_handler
+def view_count(cursor:RealDictCursor, id):
+    cursor.execute(f"""UPDATE question 
+                SET view_number = view_number + 1
+                WHERE id = '{id}'
+                    """)
+
+@connect_database.connection_handler
 def edit(cursor:RealDictCursor, id, modify):
     if modify =="downvote":
         cursor.execute(f""" UPDATE question  
@@ -89,13 +96,29 @@ def edit(cursor:RealDictCursor, id, modify):
 
 
 @connect_database.connection_handler
+def edit_answer(cursor:RealDictCursor, id, modify):
+    if modify =="downvote":
+        cursor.execute(f""" UPDATE answer  
+                            SET vote_number = vote_number - 1
+                            WHERE id = '{id}'
+                        """)
+    elif modify == "upvote":
+        cursor.execute(f""" UPDATE answer  
+                            SET vote_number = vote_number + 1
+                            WHERE id = '{id}'
+                        """)
+
+
+@connect_database.connection_handler
 def delete_answer(cursor:RealDictCursor, answer_id):
     cursor.execute(f"SELECT image FROM answer WHERE id = {answer_id}")
     img = cursor.fetchall()
-    img = [pic for pic in img][0]['image']
-    if img:
+    try:
+        img = [pic for pic in img][0]['image']
         if os.path.exists(f"static/img/answer/{img}"):
             os.remove(f"static/img/answer/{img}")
+    except:
+        print("No image")
     cursor.execute(f"DELETE FROM comment WHERE answer_id = {answer_id}")
     cursor.execute(f"DELETE FROM answer WHERE id = {answer_id}")
 
@@ -106,24 +129,19 @@ def delete(cursor:RealDictCursor, id):
     quest_img = cursor.fetchall()
     try:
         quest_img = [pic for pic in quest_img][0]['image']
-
+        print("DATACHECK : ", quest_img)
         if os.path.exists(f"static/img/question/{quest_img}"):
             os.remove(f"static/img/question/{quest_img}")
     except:
-        print("No question image")
-
-
-    cursor.execute(f"SELECT image FROM answer WHERE question_id = {id}")
-    answer = cursor.fetchall()
-    try:
-        answer_img = [pic for pic in answer][0]['image']
-        if os.path.exists(f"static/img/answer/{answer_img}"):
-            os.remove(f"static/img/answer/{answer_img}")
-    except:
-        print("No answer image")
-
-    # cursor.execute(f"DELETE FROM comment WHERE question_id = {id} OR answer_id = {answ_id}")
-    cursor.execute("DELETE FROM answer WHERE question_id = %s", id)
+        print("No image")
+    cursor.execute("DELETE FROM comment WHERE question_id = %s", id)
+    cursor.execute("SELECT id FROM answer WHERE question_id = %s", id)
+    answer_id = cursor.fetchall()
+    if answer_id:
+        for i in range(len(answer_id)):
+            answer_id = [num for num in answer_id][i]['id']
+            print("DATACHECK: ", answer_id)
+            cursor.execute("DELETE FROM comment WHERE answer_id = %s", answer_id)
     cursor.execute("DELETE FROM question  WHERE id = %s", id)
 
 
