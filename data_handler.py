@@ -58,6 +58,13 @@ def edit_answer(cursor:RealDictCursor, data):
                 SET message = '{data['message']}'
                 WHERE id = '{data['id']}'
         """)
+@connect_database.connection_handler
+def edit(cursor:RealDictCursor, row):
+    cursor.execute(f"""UPDATE question 
+                SET vote_number = %s
+                WHERE id = %s
+    """, (row['vote_number'], row['id']))
+
 
 
 @connect_database.connection_handler

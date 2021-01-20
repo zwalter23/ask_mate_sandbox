@@ -131,7 +131,7 @@ def vote_down(question_id):
         if row["id"] == int(question_id):
             if int(row["vote_number"]) > 0:
                 row["vote_number"] = int(row["vote_number"]) - 1
-                data_handler.edit(row, "question")
+                data_handler.edit(row)
     return redirect("/sort?sort=vote_number&dir=down")
 
 
@@ -139,10 +139,10 @@ def vote_down(question_id):
 def vote_up(question_id):
     question = data_handler.reader("question")
     for row in question:
-        if row["id"] == question_id:
+        if row["id"] == int(question_id):
             row["vote_number"] = int(row["vote_number"]) + 1
-            data_handler.edit(row, "question")
-    return redirect("/sort?sort=vote_number&dir=down")
+            data_handler.edit(row)
+    return redirect("/sort?sort=vote_number&dir=up")
 
 
 @app.route("/answer/<answer_id>/vote_down/<question_id>", methods=["GET", "POST"])
