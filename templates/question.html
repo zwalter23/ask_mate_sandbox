@@ -14,7 +14,7 @@
                         {% if quest["id"] == id %}
                     <legend align="center"><u><h1><b>{{ quest["title"] }}</b></h1></u></legend>
                     <h3>{{ quest["message"] }}</h3>
-                    <button onclick="window.location.href='/add_comment/{{ quest['id'] }}';" type="submit">Add comment</button>
+                    <button onclick="window.location.href='/comment/{{ quest['id'] }}/add';" type="submit">Add comment</button>
                     {% for comm in comment %}
                     {% if comm["question_id"] == id %}
                     <p>Comment: {{ comm['message'] }}
