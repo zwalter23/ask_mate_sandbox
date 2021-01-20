@@ -30,54 +30,33 @@
                 <button id="add-question" type="submit">Add question</button>
             </form>
         </div>
-        <!--  sort
-        <div align="right">
-            <form action="/sort" method="post">
-                <select name="sort">
-                    <optgroup label="High to low">
-                        <option value="id 0">Submission time</option>
-                        <option value="title 0">Title</option>
-                        <option value="vote_number 0">Votes</option>
-                        <option value="view_number 0">Visitors</option>
-                    </optgroup>
-                    <optgroup label="Low to high">
-                        <option value="id 1">Submission time</option>
-                        <option value="title 1">Title</option>
-                        <option value="vote_number 1">Votes</option>
-                        <option value="view_number 1">Visitors</option>
-                  </optgroup>
-                </select>
-                <button type="submit">Sort</button>
-            </form>
-        </div>
-        -->
         <div>
             <table border="2px" width="80%" align="center">
                 <tr>
                     <th>
                         ID
-                        <button onclick="window.location.href='/sort?sort=id&dir=up';"><b>&#8593;</b></button>
-                        <button onclick="window.location.href='/sort?sort=id&dir=down';"><b>&#8595;</b></button>
+                        <button onclick="window.location.href='/sort?sort=id&dir=asc';"><b>&#8593;</b></button>
+                        <button onclick="window.location.href='/sort?sort=id&dir=desc';"><b>&#8595;</b></button>
                     </th>
                     <th>
                         Title
-                        <button onclick="window.location.href='/sort?sort=title&dir=up';"><b>&#8593;</b></button>
-                        <button onclick="window.location.href='/sort?sort=title&dir=down';"><b>&#8595;</b></button>
+                        <button onclick="window.location.href='/sort?sort=title&dir=asc';"><b>&#8593;</b></button>
+                        <button onclick="window.location.href='/sort?sort=title&dir=desc';"><b>&#8595;</b></button>
                     </th>
                     <th>
                         Question
-                        <button onclick="window.location.href='/sort?sort=message&dir=up';"><b>&#8593;</b></button>
-                        <button onclick="window.location.href='/sort?sort=message&dir=down';"><b>&#8595;</b></button>
+                        <button onclick="window.location.href='/sort?sort=message&dir=asc';"><b>&#8593;</b></button>
+                        <button onclick="window.location.href='/sort?sort=message&dir=desc';"><b>&#8595;</b></button>
                     </th>
                     <th>
                         Visitors
-                        <button onclick="window.location.href='/sort?sort=view_number&dir=up';"><b>&#8593;</b></button>
-                        <button onclick="window.location.href='/sort?sort=view_number&dir=down';"><b>&#8595;</b></button>
+                        <button onclick="window.location.href='/sort?sort=view_number&dir=asc';"><b>&#8593;</b></button>
+                        <button onclick="window.location.href='/sort?sort=view_number&dir=desc';"><b>&#8595;</b></button>
                     </th>
                     <th>
                         Votes
-                        <button onclick="window.location.href='/sort?sort=vote_number&dir=up';"><b>&#8593;</b></button>
-                        <button onclick="window.location.href='/sort?sort=vote_number&dir=down';"><b>&#8595;</b></button>
+                        <button onclick="window.location.href='/sort?sort=vote_number&dir=asc';"><b>&#8593;</b></button>
+                        <button onclick="window.location.href='/sort?sort=vote_number&dir=desc';"><b>&#8595;</b></button>
                     </th>
                     <th>
                         Vote
