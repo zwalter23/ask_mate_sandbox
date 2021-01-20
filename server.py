@@ -34,9 +34,9 @@ def list2():
 def visitor(question_id):
     question = data_handler.reader("question")
     for row in question:
-        if question_id == row["id"]:
-            row["view_number"] = int(row["view_number"]) + 1
-            data_handler.edit(row, "question")
+        if int(question_id) == row["id"]:
+            row["view_number"] = row["view_number"] + 1
+            data_handler.edit2(row)
     return redirect(f"/question/{question_id}")
 
 
