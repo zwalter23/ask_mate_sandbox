@@ -11,23 +11,15 @@ ALLOWED_EXTENSIONS = {'png', 'jpg'}
 
 
 @app.route("/list")
-def list():
-        question = data_handler.reader("question")
-        quest = []
-        a = [x for x in question]
-        for row in a[::-1]:
-            quest.append(row)
-        return render_template("list.html", questions=quest)
+def list_default():
+    question = data_handler.reader("question")
+    return render_template("list.html", questions=question)
+
 
 @app.route("/")
-def list2():
-        question = data_handler.reader("question")
-        quest = []
-        a = [x for x in question]
-        for row in a[::-1]:
-            quest.append(row)
-        quest = quest [:5]
-        return render_template("list.html", questions=quest)
+def list_last_5():
+    question = data_handler.reader("question")[:5]
+    return render_template("list.html", questions=question)
 
 
 @app.route("/visitor/<question_id>")
@@ -60,32 +52,30 @@ def new_answer(question_id):
 @app.route("/save_answer/<question_id>", methods=["GET", "POST"])
 def save_answer(question_id):
     if request.method == "POST":
-        id = data_handler.id_generator("answer")
         answer = request.form["answer"]
         f = request.files["file"]
         if f:
             f.filename = "id"+str(id)+f.filename
             f.save(os.path.join(app.config['UPLOAD_FOLDER'], "answer", f.filename))
-        new_answer = {"id": id, "submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "vote_number": 0,
+        new_answer = {"submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "vote_number": 0,
                       "question_id": question_id, "message": answer, "image": f.filename}
         data_handler.writer(new_answer, "answer")
-    return redirect(f"/question/{question_id}")
+    return redirect(f"/question/{data_handler.reader('question')[0]['id']}")
 
 
 @app.route("/save", methods=["GET", "POST"])
 def save():
     if request.method == "POST":
-        id = data_handler.id_generator("question")
         title = request.form["title"]
         message = request.form["message"]
         f = request.files["file"]
         if f:
             f.filename = "id"+str(id)+f.filename
             f.save(os.path.join(app.config['UPLOAD_FOLDER'],"question", f.filename))
-        question = {"id": id, "submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "view_number": 0,
+        question = {"submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "view_number": 0,
                     "vote_number": 0, "title": title, "message": message, "image": f.filename}
         data_handler.writer(question, "question")
-    return redirect(f"/question/{id}")
+    return redirect(f"/question/{data_handler.reader('question')[0]['id']}")
 
 
 @app.route("/file_upload", methods=["GET", "POST"])

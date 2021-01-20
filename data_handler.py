@@ -16,14 +16,14 @@ ALLOWED_EXTENSIONS = {'png', 'jpg'}
 @connect_database.connection_handler
 def writer(cursor: RealDictCursor, data, table):
     if table == 'question':
-        query = f"""INSERT INTO question (id, submission_time, view_number, vote_number, title, message, image)
-                       VALUES (%s, %s, %s, %s, %s, %s, %s)"""
-        values = (data['id'], data['submission_time'], data['view_number'], data['vote_number'], data['title'],
+        query = f"""INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
+                       VALUES (%s, %s, %s, %s, %s, %s)"""
+        values = (data['submission_time'], data['view_number'], data['vote_number'], data['title'],
                 data['message'], data['image'])
     elif table == 'answer':
-        query = f"""INSERT INTO answer (id, submission_time, vote_number, question_id, message, image)
-                       VALUES(%s, %s, %s, %s, %s, %s)"""
-        values = (data['id'], data['submission_time'], data['vote_number'], data['question_id'], data['message'], data['image'])
+        query = f"""INSERT INTO answer (submission_time, vote_number, question_id, message, image)
+                       VALUES(%s, %s, %s, %s, %s)"""
+        values = (data['submission_time'], data['vote_number'], data['question_id'], data['message'], data['image'])
     # elif table == 'comment':
     #     if data['question_id'] == 'NULL':
     #         query = f"""INSERT INTO comment
@@ -40,7 +40,7 @@ def writer(cursor: RealDictCursor, data, table):
 
 @connect_database.connection_handler
 def reader(cursor: RealDictCursor, data):
-    cursor.execute(f"SELECT * FROM {data}")
+    cursor.execute(f"SELECT * FROM {data} ORDER BY id DESC")
     return cursor.fetchall()
 
 
