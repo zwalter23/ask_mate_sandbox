@@ -160,6 +160,12 @@ def sort(cursor: RealDictCursor, x):
     return cursor.fetchall()
 
 
+@connect_database.connection_handler
+def search_question(cursor: RealDictCursor, text):
+    cursor.execute(f"SELECT * FROM question WHERE message LIKE '%{text}%' OR title LIKE '%{text}%'")
+    return cursor.fetchall()
+
+
 def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS

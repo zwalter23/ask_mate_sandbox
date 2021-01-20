@@ -22,6 +22,14 @@ def list_last_5():
     return render_template("list.html", questions=question)
 
 
+@app.route("/search")
+def search():
+    text = request.query_string
+    text = text.decode().split("=")[1]
+    questions = data_handler.search_question(text)
+    return render_template("list.html", questions=questions, searched=1)
+
+
 @app.route("/visitor/<question_id>")
 def visitor(question_id):
     data_handler.view_count(question_id)
