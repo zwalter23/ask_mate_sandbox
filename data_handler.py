@@ -59,20 +59,22 @@ def edit_answer(cursor:RealDictCursor, data):
                 WHERE id = '{data['id']}'
         """)
 @connect_database.connection_handler
-def edit(cursor:RealDictCursor, row):
-    cursor.execute(f"""UPDATE question 
-                SET vote_number = %s
-                WHERE id = %s
-    """, (row['vote_number'], row['id']))
-
-@connect_database.connection_handler
-def view_count(cursor:RealDictCursor, id):
-    cursor.execute(f"""UPDATE question 
+def edit(cursor:RealDictCursor, id, modify):
+    if modify =="downvote":
+        cursor.execute(f""" UPDATE question  
+                            SET vote_number = vote_number - 1
+                            WHERE id = '{id}'
+                        """)
+    elif modify == "upvote":
+        cursor.execute(f""" UPDATE question  
+                            SET vote_number = vote_number + 1
+                            WHERE id = '{id}'
+                        """)
+    elif modify == "view_count":
+        cursor.execute(f"""UPDATE question 
                 SET view_number = view_number + 1
                 WHERE id = '{id}'
                     """)
-
-
 
 @connect_database.connection_handler
 def delete_answer(cursor:RealDictCursor, answer_id):

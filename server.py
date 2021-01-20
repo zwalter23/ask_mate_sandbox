@@ -32,7 +32,7 @@ def list2():
 
 @app.route("/visitor/<question_id>")
 def visitor(question_id):
-    data_handler.view_count(question_id)
+    data_handler.edit(question_id,"view_count")
     return redirect(f"/question/{question_id}")
 
 
@@ -122,23 +122,13 @@ def delete_answer(answer_id, question_id):
 
 @app.route("/question/<question_id>/vote_down", methods=["GET", "POST"])
 def vote_down(question_id):
-    question = data_handler.reader("question")
-    for row in question:
-        if row["id"] == int(question_id):
-            if int(row["vote_number"]) > 0:
-                row["vote_number"] = int(row["vote_number"]) - 1
-                data_handler.edit(row)
-    return redirect("/sort?sort=vote_number&dir=down")
-
+    data_handler.edit(question_id, "downvote")
+    return redirect("/list")
 
 @app.route("/question/<question_id>/vote_up", methods=["GET", "POST"])
 def vote_up(question_id):
-    question = data_handler.reader("question")
-    for row in question:
-        if row["id"] == int(question_id):
-            row["vote_number"] = int(row["vote_number"]) + 1
-            data_handler.edit(row)
-    return redirect("/sort?sort=vote_number&dir=up")
+    data_handler.edit(question_id, "upvote")
+    return redirect("/list")
 
 
 @app.route("/answer/<answer_id>/vote_down/<question_id>", methods=["GET", "POST"])
