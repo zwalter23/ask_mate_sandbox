@@ -123,22 +123,13 @@ def vote_up(question_id):
 
 @app.route("/answer/<answer_id>/vote_down/<question_id>", methods=["GET", "POST"])
 def answer_vote_down(answer_id, question_id):
-    answer = data_handler.reader("answer")
-    for row in answer:
-        if row["id"] == answer_id:
-            if int(row["vote_number"]) > 0:
-                row["vote_number"] = int(row["vote_number"]) - 1
-                data_handler.edit(row, "answer")
+    data_handler.edit_answer(answer_id,"downvote")
     return redirect(f"/question/{question_id}")
 
 
 @app.route("/answer/<answer_id>/vote_up/<question_id>", methods=["GET", "POST"])
 def answer_vote_up(answer_id, question_id):
-    answer = data_handler.reader("answer")
-    for row in answer:
-        if row["id"] == answer_id:
-            row["vote_number"] = int(row["vote_number"]) + 1
-            data_handler.edit(row, "answer")
+    data_handler.edit_answer(answer_id,"upvote")
     return redirect(f"/question/{question_id}")
 
 

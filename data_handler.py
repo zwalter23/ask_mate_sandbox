@@ -76,6 +76,21 @@ def edit(cursor:RealDictCursor, id, modify):
                 WHERE id = '{id}'
                     """)
 
+
+@connect_database.connection_handler
+def edit_answer(cursor:RealDictCursor, id, modify):
+    if modify =="downvote":
+        cursor.execute(f""" UPDATE answer  
+                            SET vote_number = vote_number - 1
+                            WHERE id = '{id}'
+                        """)
+    elif modify == "upvote":
+        cursor.execute(f""" UPDATE answer  
+                            SET vote_number = vote_number + 1
+                            WHERE id = '{id}'
+                        """)
+
+
 @connect_database.connection_handler
 def delete_answer(cursor:RealDictCursor, answer_id):
     cursor.execute(f"SELECT image FROM answer WHERE id = {answer_id}")
@@ -118,28 +133,3 @@ def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
-def id_generator(file):
-    id = 1
-    read = reader(file)
-    for row in read:
-        if row:
-            id = int(row["id"]) + 1
-    return id
-
-
-def sort(x):
-    d = re.split("=|&", x)[3]
-    y = re.split("=|&", x)[1]
-    print("sorter:",x, d)
-    questions = reader("question")
-    questions = list(questions)
-    try:
-        lst = sorted(questions, key = lambda i: int(i[y]))
-    except:
-        lst = sorted(questions, key=lambda i: i[y].lower())
-    if d == "down":
-        lst = lst[::-1]
-    for row in lst:
-        print(row)
-    return lst
