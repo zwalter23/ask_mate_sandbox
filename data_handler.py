@@ -66,11 +66,11 @@ def edit(cursor:RealDictCursor, row):
     """, (row['vote_number'], row['id']))
 
 @connect_database.connection_handler
-def edit2(cursor:RealDictCursor, row):
+def view_count(cursor:RealDictCursor, id):
     cursor.execute(f"""UPDATE question 
-                SET view_number = %s
-                WHERE id = %s
-    """, (row['view_number'], row['id']))
+                SET view_number = view_number + 1
+                WHERE id = '{id}'
+                    """)
 
 
 

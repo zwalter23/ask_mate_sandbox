@@ -32,11 +32,7 @@ def list2():
 
 @app.route("/visitor/<question_id>")
 def visitor(question_id):
-    question = data_handler.reader("question")
-    for row in question:
-        if int(question_id) == row["id"]:
-            row["view_number"] = row["view_number"] + 1
-            data_handler.edit2(row)
+    data_handler.view_count(question_id)
     return redirect(f"/question/{question_id}")
 
 
