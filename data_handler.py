@@ -36,9 +36,8 @@ def writer(cursor: RealDictCursor, data, table):
                            VALUES(%s, NULL, %s, %s, %s)"""
             values = (int(data['question_id']), data['message'], data['submission_time'],
                       data['edited_count'])
-
-
     cursor.execute(query, values)
+
 
 @connect_database.connection_handler
 def tag(cursor: RealDictCursor, data):
@@ -53,9 +52,16 @@ def get_question_tag(cursor: RealDictCursor, id):
     cursor.execute(query)
     return cursor.fetchone()
 
+
 @connect_database.connection_handler
 def reader(cursor: RealDictCursor, table):
     cursor.execute(f"SELECT * FROM {table} ORDER BY id DESC")
+    return cursor.fetchall()
+
+
+@connect_database.connection_handler
+def get_answer(cursor:RealDictCursor, id):
+    cursor.execute(f"SELECT message FROM answer WHERE id = {id}")
     return cursor.fetchall()
 
 
@@ -125,6 +131,11 @@ def edit_answer(cursor:RealDictCursor, id, modify):
 
 
 @connect_database.connection_handler
+def update_answer(cursor:RealDictCursor, id, data):
+    cursor.execute(f"UPDATE answer SET message = '{data}' WHERE id = {id}")
+
+
+@connect_database.connection_handler
 def delete_answer(cursor:RealDictCursor, answer_id):
     cursor.execute(f"SELECT image FROM answer WHERE id = {answer_id}")
     img = cursor.fetchall()
@@ -144,7 +155,6 @@ def delete(cursor:RealDictCursor, id):
     quest_img = cursor.fetchall()
     try:
         quest_img = [pic for pic in quest_img][0]['image']
-        print("DATACHECK : ", quest_img)
         if os.path.exists(f"static/img/question/{quest_img}"):
             os.remove(f"static/img/question/{quest_img}")
     except:
@@ -153,10 +163,8 @@ def delete(cursor:RealDictCursor, id):
     cursor.execute(f"SELECT id FROM answer WHERE question_id = {id}")
     answer_id = cursor.fetchall()
     if answer_id:
-        print("DATACHECK", answer_id)
         for i in range(len(answer_id)):
             ans_id = [num for num in answer_id][i]['id']
-            print("DATACHECK: ", ans_id)
             delete_answer(ans_id)
     cursor.execute(f"DELETE FROM question  WHERE id = {id}")
 

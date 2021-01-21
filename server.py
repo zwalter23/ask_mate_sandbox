@@ -42,8 +42,7 @@ def quest(question_id):
     question = data_handler.reader("question")
     answer = data_handler.reader("answer")
     comment = data_handler.reader("comment")
-    print(question_id, [x['id'] for x in question])
-    return render_template("question.html", question = question, answer = answer, comment = comment, id = int(question_id),tag=tag)
+    return render_template("question.html", question=question, answer=answer, comment=comment, tag=tag, id=int(question_id))
 
 
 @app.route("/add-question", methods=["GET", "POST"])
@@ -56,7 +55,7 @@ def new_answer(question_id):
     questions = data_handler.reader("question")
     for row in questions:
         if row["id"] == int(question_id):
-            return render_template("new_answer.html", question=row, id=question_id)
+            return render_template("new_answer.html", question=row, id=int(question_id))
 
 
 @app.route("/save_answer/<question_id>", methods=["GET", "POST"])
@@ -91,7 +90,7 @@ def save():
 @app.route("/question/<question_id>/edit")
 def edit_question(question_id):
     question = data_handler.reader("question")
-    return  render_template("edit.html", question = question, id = int(question_id))
+    return  render_template("edit.html", question=question, id=int(question_id))
 
 
 @app.route("/edit/<id>", methods=["GET", "POST"])
@@ -107,6 +106,18 @@ def edit_quest(id):
 def delete_question(question_id):
     data_handler.delete(question_id)
     return redirect("/")
+
+
+@app.route("/answer/<answer_id>/edit/<question_id>", methods=["GET", "POST"])
+def edit_answer(answer_id, question_id):
+    if request.method == "POST":
+        text = request.form.get("text")
+        data_handler.update_answer(answer_id, text)
+        print("DATACHECK:", question_id)
+        return redirect(f"/question/{question_id}")
+    answer = data_handler.get_answer(answer_id)[0]['message']
+    print("DATACHECK : ", answer)
+    return render_template("edit_answer.html", answer=answer, answer_id=int(answer_id), question_id=int(question_id))
 
 
 @app.route("/answer/<answer_id>/delete/<question_id>", methods=["GET", "POST"])
@@ -137,18 +148,6 @@ def answer_vote_up(answer_id, question_id):
     data_handler.edit_answer(answer_id, "upvote")
     return redirect(f"/question/{question_id}")
 
-@app.route("/question/<question_id>/new-tag", methods=["GET","POST"])
-def add_tag_to_question(question_id):
-    if request.method == "POST":
-        pass
-    tags=data_handler.reader("tag")
-    return render_template("new_tag.html", tags=tags,id=question_id)
-
-@app.route("/question/<id>/add-new-tag", methods=["GET","POST"])
-def add_new_tag(id):
-    new_tag = request.form['new_tag']
-    data_handler.tag(new_tag)
-    return redirect(f"/question/{id}/new-tag")
 
 @app.route("/sort", methods=["GET", "POST"])
 def sort():
