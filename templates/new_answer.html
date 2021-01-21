@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>New Answer</title>
-
-        
-</head>
-<body bgcolor="55555">
-    <fieldset class="block">
-            <h1 style="color:white;" align="center">{{ question["message"] }}</h1>
-        <fieldset>
-            <legend>Your answer</legend>
-
-            <form action="/save_answer/{{ id }}" method="post" enctype="multipart/form-data">
-                <textarea  name="answer" rows="15" cols="150"></textarea><br>
-                <input type="file" name="file" id="picture"/>
-                <button type="submit">Send answer</button>
-            </form>
-        </fieldset>
-    </fieldset>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>New Answer</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body>
+        <div class="header">
+                <div class="question-title">
+                    {{ question["message"] }}
+                </div>
+        </div>
+        <div class="blur">
+            <div class="button-holder">
+                <form action="/save_answer/{{ id }}" method="post" enctype="multipart/form-data">
+                    <textarea  name="answer" rows="7" cols="107"></textarea>
+                    <label class="button-label" for="picture">UPLOAD</label>
+                    <input type="file" name="file" id="picture"/>
+                    <button class="button-label" type="submit">SEND ANSWER</button>
+                </form>
+            </div>
+        </div>
+    </body>
 </html>

@@ -1,29 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Add question</title>
-    <style>
-        bgc
-    </style>
-    
-</head>
-<body bgcolor="55555">
-<div>
-    <form action="/save" method="post" enctype="multipart/form-data">
-            <h2>Add question</h2>
-            <fieldset class="fill-area">
-                <legend><label for="title">Title</label></legend>
-                <textarea name="title" rows="5" cols="100"></textarea>
-            </fieldset>
-            <fieldset class="fill-area">
-                <legend><label for="message">Question</label></legend>
-                <textarea name="message" rows="10" cols="100"></textarea>
-                <input type="file" name="file" id="picture"/>
-            </fieldset>
-                <button type="submit">Submit question</button>
-                <a class="home-button" href="/">Go Back</a>
-    </form>
-</div>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Add question</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body>
+        <div class="header">
+            <div class="new-title">
+                ADD NEW QUESTION
+            </div>
+            <div class="button-holder-home">
+                <a href="/"><button class="home-button" >HOME</button></a>
+            </div>
+        </div>
+        <div class="list">
+            <form action="/save" method="post" enctype="multipart/form-data">
+                <div class="textarea">
+                    <label for="title"></label>
+                    <textarea name="title" placeholder="Title" rows="20" cols="80"></textarea>
+                </div>
+                <div class="textarea">
+                    <label for="message"></label>
+                    <textarea name="message" placeholder="Question" rows="20" cols="107"></textarea>
+                </div>
+                <div class="button-holder">
+                    <label class="button-label" for="picture">UPLOAD</label>
+                    <input type="file" name="file" id="picture"/>
+                    <button class="button-label" type="submit">SUBMIT QUESTION</button>   
+                </div>
+            </form>
+        </div>
+    </body>
 </html>

@@ -1,125 +1,345 @@
 body {
-    width: 1300px;
-    margin: auto;
-    display: flex;
-    background-color: #222;
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-}
-
-legend {
-    color: white;
-    font-size: 30px;
-}
-
-a {
-    color: inherit;
-}
-
-fieldset {
-    margin-top: 30px;
-    margin-bottom: 30px;
-    margin-left: 100px;
-    margin-right: 100px;
-}
-
-p {
-    font-size: 20px;
-    color: white;
-}
-
-.page-title {
-    margin-top: 50px;
-    text-align: center;
-    font-size: 50px;
-    color: white;
-
-}
-
-
-li{
-    font-size: 20px;
-    color: white;
-    margin-bottom: 20px;
-}
-
-form {
-    margin: auto;
-}
-
-.block {
-    margin: 50px auto ;
-}
-
-.fill-area {
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-bottom: 50px;
-}
-
-#add-question {
-    position: fixed;
-    right: 40px;
-    top: 70px;
-}
-
-button {
-    text-shadow: none;
-    border-style: none;
-    text-decoration: none;
-    height: 50px;
-    border-radius: 10px;
-    background-color: white;
-    color: #222;
-    text-align: center;
-    font-weight: bold;
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-}
-
-.home-button {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    padding: 16px; 
-    line-height: 30px;
-    text-shadow: none;
-    border-style: none;
-    text-decoration: none;
-    border-radius: 10px;
-    background-color: white;
-    color: #222;
-    text-align: center;
-    font-weight: bold;
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-}
-
-.button {
-    padding: 16px;
-    text-shadow: none;
-    border-style: none;
-    text-decoration: none;
-    height: 50px;
-    border-radius: 10px;
-    background-color: white;
-    color: #222;
-    text-align: center;
-    font-weight: bold;
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-}
-
-.container {
+    background-image: url('/static/img/background/wallhaven-newlpr.jpg');
+    width: 90%;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 30px;
-}
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;}
 
-.card-holder {
+.header {
+    background-color: black;
+    opacity: 0.8;
+    display: flex;
+    justify-content: space-between;}
+
+.title {
+    padding: 25px;
+    color: white;
+    font-size: 100px;
+    font-weight: bold;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;}
+
+.new-title {
+    padding: 25px;
+    color: white;
+    font-size: 70px;
+    font-weight: bold;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;}
+
+#title-head {
+    width: 300px;}
+
+.navigation-buttons {
+    position: relative;
     display: flex;
     justify-content: space-between;
-}
+    width: 700px;
+    right: 60px;
+    top: 60px;}
 
-textarea {
-    display: block;
+.button-holder-home {
+    display: flex;
+    right: 40px;
+    padding: 40px;}
+
+.button-holder {
+    position: relative;
+    justify-content: space-between;
+    width: 350px;
+    height: 40px;
+    line-height: 20px;
+    left: 3px;
+    padding: 40px;}
+
+
+#showmore-a, #showmore, #add-question, #search-button, #lister, .home-button, .button-label, #question-comments {
+    display: inline;
+    background: #a71b1b;
+    text-shadow: none;
+    border-style: none;
+    text-decoration: none;
+    padding: 10px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    opacity: 0.8;
+    text-align: center;
+    transition: 0.5s;}
+
+#searcher {
+    overflow: hidden;}
+
+#search-phrase {
+    text-shadow: none;
+    border-style: none;
+    text-decoration: none;
+    margin: 0;
+    height: 40px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    float: left;}
+
+#search-button {
+    float: left;}
+
+.button-small:hover, #showmore-a:hover, #showmore:hover , #add-question:hover, #search-button:hover, #lister:hover, .button:hover, .button-label:hover , .home-button:hover {
+    background-color: white;
+    color: black;
+    opacity: 0.4;}
+
+.list  {
+    background-color: rgb(20, 20, 20);
+    color: white;
+    opacity: 0.8;}
+    
+.blur {
+    background-color: rgb(20, 20, 20);
+    color: white;
+    height: 250px;
+    opacity: 0.8;}
+
+a:link, a:visited {
+    color:#a71b1b;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;}
+
+.question-link:hover {
+    background-color: white;
+    opacity: 0.4;
+    transition: .7s;}
+
+th {
+    background-color: #a71b1b ;
+    opacity: 0.8;}
+
+#id-head {
+    width: 90px;}
+
+#visitors-head, #votes-head {
+    width: 130px;}
+
+.voter{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 60px;
+    height: 60px;
+    margin: 10px;
+    text-align: center;
+    vertical-align: middle;}
+  
+.vote_arrow_up {
+    flex: 1 0 0;
+    text-align: center;
+    opacity: .5;
+    transition: .5s;
+    cursor: pointer;
+    background: #4BC35F;
+    height: 50%;
+    border-radius: 100px 100px 0 0;}
+  
+.vote_arrow_down {
+    flex: 1 0 0;
+    text-align: center;
+    opacity: .5;
+    transition: .5s;
+    cursor: pointer;
+    height: 50%;
+    background: #C15044;
+    border-radius: 0 0 100px 100px;}
+    
+.vote_arrow_up:hover, .vote_arrow_down:hover {
+    opacity: 1;} 
+  
+.count {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    margin: 20px;
+    background-color: black;
+    width: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 10px;
+    text-align: center;
+    box-shadow: 0 0 0 15px black;
+    pointer-events: none;
+    border-radius: 50%;
+    color: white;}
+
+.number {
+    justify-content:center;
+    text-align: justify;
+    line-height: 10px;}
+
+.textarea {
+    padding: 40px 0 0 40px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    display: inline-flex;}
+
+#picture {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;}
+
+.question-title {
+    color: white;
+    font-size: 40px;
+    padding: 40px;
+    font-weight: bold;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;}
+
+.story {
+    padding:40px;
+    text-align: justify;
+    font-size: 25px;}
+
+.tag {
+    font-size: 15px;}
+
+.holder {
+    position: relative;
+    display: flex;
+    justify-content: space-evenly;
+    width: 300px;
+    height: 40px;
+    line-height: 20px;
+    left: 1235px;
+    padding: 0 40px 0 40px;}
+
+.quest-message {
+    background-color: rgb(40, 40, 40);
+    padding: 30px;}
+
+.comment-button-holder {
+    position: relative;
+    display: flex;
+    justify-content: space-evenly;
+    width: 150px;
+    left: 1260px;
+    line-height: 20px;}
+
+.comment {
+    font-size: 17px;
+    padding-top: 10px;}
+
+.story-comment {
+    background-color: rgb(40, 40, 40);
+    padding: 30px;
+    margin: 5px 0;
+    width: 1400px;
     margin-left: auto;
     margin-right: auto;
+    text-align: justify;}
 
+
+[type="checkbox"] {
+     position:absolute;
+     left: -9999px; }
+
+#showmore {
+    font-size: 20px;
+    cursor:pointer;
+    margin-left:auto;
+    margin-right:auto;
+    transition: top .45s cubic-bezier(.44, .99, .48, 1);}
+
+#showmore:before {
+    content: 'QUESTION COMMENTS';}
+
+input[type="checkbox"] ~ ul {
+    width: 100%;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height .45s cubic-bezier(.44, .99, .48, 1);}
+
+[type="checkbox"]:checked ~ ul {
+    max-height: 2000px;}
+
+[type="checkbox"]:checked + label {
+    top: 100%;}
+      
+[type="checkbox"]:checked + label:before {
+    content: 'CLOSE';}
+
+ul {
+    list-style-type: none;}
+
+li {
+    padding:0px;}
+
+#showmore-a:before {
+    content: 'ANSWERS';}
+
+.holder1 {
+    position: relative;
+    display: flex;
+    justify-content: space-evenly;
+    width: 630px;
+    height: 40px;
+    line-height: 20px;
+    left: 740px;
+    padding: 0 40px 0 40px;}
+
+.container1 {
+    list-style-type: none;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    }
+
+
+.container2 {
+    list-style-type: none;
+    display: flex;
+    position:relative;
+    align-items: flex-end;
+    justify-content: flex-end;
+    }
+
+.container3 {
+    list-style-type: none;
+    display: flex;
+    position:relative;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 500px;
+    top: 10px;
+    left: 1085px;
+    }
+
+.header2 {
+    background-color: black;
+    opacity: 0.8;
+    display: flex;
+}
+
+.button-small {
+    display: inline;
+    background: #a71b1b;
+    text-shadow: none;
+    border-style: none;
+    text-decoration: none;
+    padding: 5px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: white;
+    font-weight: bold;
+    opacity: 0.8;
+    text-align: center;
+    transition: 0.5s;}
+}
+
+.tired {
+    padding: 80px;
+}
+
+.holder3 {
+    position: relative;
+    display: flex;
+    justify-content: space-evenly;
+    width: 100px;
+    height: 40px;
+    line-height: 20px;
+    left: 200px;
+    padding: 0 40px 0 40px;}
 }

@@ -233,17 +233,17 @@ def search_text(cursor: RealDictCursor, text):
 def highlight(text, question, answer):
     for quest in question:
         if re.findall(text, quest['title']):
-            titles = re.sub(text, f'<span style="font-weight:bold;background-color:#99ff66">{text}</span>', quest['title'])
+            titles = re.sub(text, f'<span style="font-weight:bold;background-color:#a71b1b;color:white">{text}</span>', quest['title'])
             title = quest["title"].replace(quest['title'], titles)
             quest.update({'title': title})
         if re.findall(text, quest['message']):
-            message = re.sub(text, f'<span style="font-weight:bold;background-color:#99ff66">{text}</span>', quest['message'])
+            message = re.sub(text, f'<span style="font-weight:bold;background-color:#a71b1b;color:white">{text}</span>', quest['message'])
             mess = quest["message"].replace(quest['message'], message)
             quest.update({'message': mess})
 
     for answ in answer:
         if re.findall(text, answ['message']):
-            message = re.sub(text, f'<span style="font-weight:bold;background-color:#99ff66">{text}</span>', answ['message'])
+            message = re.sub(text, f'<span style="font-weight:bold;background-color:#a71b1b;color:white">{text}</span>', answ['message'])
             mess = answ["message"].replace(answ['message'], message)
             answ.update({'message': mess})
     return question, answer

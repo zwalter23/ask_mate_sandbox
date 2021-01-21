@@ -1,40 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Search</title>
-</head>
-<body>
-<a href="/">Home</a>
-<form action="/search?q=<search phrase>" method="get">
-    <input type="text" name="search phrase" id="search phrase">
-    <button type="submit">Search</button>
-</form>
-<h2>Search: {{ text }}</h2>
-<div>
-    {% if questions %}
-    <p>Found questions:</p>
-    {% for quest in questions %}
-        <ul>
-            <li><h3><a href="/question/{{ quest['id'] }}">&#128214;</a>{{ quest['title']|safe }}</h3>
-                <p>{{ quest['message']|safe }}</p>
-            </li>
-        </ul>
-    {% endfor %}
-    {% else %}
-    No question found
-    {% endif %}
-        <hr>
-    {% if answers %}
-    <p>Found answers :</p>
-    {% for answ in answers %}
-        <ul>
-            <li><a href="/question/{{ answ['question_id'] }}">&#128214;</a>{{ answ['message']|safe }}</li>
-        </ul>
-    {% endfor %}
-    {% else %}
-    No answer found
-    {% endif %}
-</div>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Question</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+    <body>
+        <div class="header">
+            <div class="question-title">
+                SEARCH RESULTS
+            </div>
+            <div class="header2">
+                <div class="button-holder-home">
+                    <form id="searcher" action="/search?q=<search phrase>" method="get">
+                        <input id="search-phrase" type="text" placeholder="Search..." name="search-phrase">
+                        <button id="search-button" type="submit"><i class="fa fa-search"></i></button>
+                    </form>
+                </div>
+                <div class="button-holder-home">
+                    <a href="/"><button class="home-button" >HOME</button></a>
+                </div>
+            </div>
+        </div>
+        <div class="list">
+            <h2>SEARCHED FOR: "{{ text }}"</h2>
+            <div>
+                {% if questions %}
+                <h3>Found questions:</h3>
+                {% for quest in questions %}
+                    <ul>
+                        <li ><a href="/question/{{ quest['id'] }}">&#x2608;</a> {{ quest['title']|safe }}
+                            <p>{{ quest['message']|safe }}</p>
+                        </li>
+                    </ul>
+                {% endfor %}
+                {% else %}
+                No question found
+                {% endif %}
+                    <hr>
+                {% if answers %}
+                <h3>Found answers :</h3>
+                {% for answ in answers %}
+                    <ul>
+                        <li ><a href="/question/{{ answ['question_id'] }}">&#x2608;</a> {{ answ['message']|safe }}</li>
+                    </ul>
+                {% endfor %}
+                {% else %}
+                No answer found
+                {% endif %}
+            </div>
+        </div>
+    </body>
 </html>

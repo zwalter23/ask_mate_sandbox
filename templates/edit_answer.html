@@ -1,14 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit answer</title>
-</head>
-<body>
-<form action="/answer/{{ answer_id }}/edit/{{ question_id }}" method="post">
-        <label for="text">Edit answer</label>
-        <textarea name="text" id="text" rows="4" cols="50">{{ answer }}</textarea>
-        <button type="submit">Save</button>
-</form>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Edit answer</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body>
+        <div class="header">
+            <div class="new-title">
+                ADD ANSWER
+            </div>
+        </div>
+        <div class="blur">
+            <div class="button-holder">
+                <form action="/answer/{{ answer_id }}/edit/{{ question_id }}" method="post">
+                        <label for="text"></label>
+                        <textarea name="text" id="text" rows="7" cols="80">{{ answer }}</textarea>
+                        <button class="button-label" type="submit">SAVE EDIT</button>
+                </form>
+            </div>
+        </div>
+    </body>
 </html>

@@ -1,18 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit comment</title>
-</head>
-<body>
-    <form action="/comment/{{ comment_id }}/edit/{{ question_id }}" method="post">
-        {% for comm in comment  %}
-            {% if comm['id'] == comment_id %}
-                <label for="comment">Edit comment</label>
-                <textarea name="comment" id="comment" rows="4" cols="50">{{ comm['message'] }}</textarea>
-                <button type="submit">Save</button>
-            {% endif %}
-        {% endfor %}
-    </form>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Edit comment</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body>
+        <div class="header">
+            <div class="new-title">
+                EDIT COMMENT
+            </div>
+        </div>
+        <div class="blur">
+            <div class="button-holder">
+                <form action="/comment/{{ comment_id }}/edit/{{ question_id }}" method="post">
+                    {% for comm in comment  %}
+                        {% if comm['id'] == comment_id %}
+                            <label for="comment"></label>
+                            <textarea name="comment" id="comment" rows="7" cols="80">{{ comm['message'] }}</textarea>
+                            <button class="button-label" type="submit">SAVE COMMENT</button>
+                        {% endif %}
+                    {% endfor %}
+                </form>
+            </div>
+        </div>
+    </body>
 </html>

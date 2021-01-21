@@ -1,78 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Question</title>
 
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <title>Question</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
 
-    <body bgcolor="55555">
-        <fieldset class="block">
-            <div align="center">
-                <fieldset class="fill-area">
-                    {% for quest in question %}
-                        {% if quest["id"] == id %}
-                    <legend align="center"><u><h1><b>{{ quest["title"] }}</b></h1></u></legend>
-                    <h3>{{ quest["message"] }}</h3>
-                    {% if tags[0]['tag_id']!= None %}
+<body>
+    <div class="header">
+        <div class="question-title">
+            {% for quest in question %}
+            {% if quest["id"] == id %}
+            {{ quest["title"] }}
+        </div>
+        <div class="button-holder-home">
+            <a href="/"><button class="home-button">HOME</button></a>
+        </div>
+    </div>
+    <div class="list">
+        <div class="story">
+            {% if quest['image'] %}
+            <p align="center"><img alt="{{ quest['image'] }}" src="/static/img/question/{{ quest['image'] }}"
+                    style="height:300px"></p>
+            {% endif %}
+            <div class="quest-message">{{ quest["message"] }}</div>
+            {% if tags[0]['tag_id']!= None %}
+            <div class="tag">Tag: {% for tag in tags %} {{tag['name']}} <button class="button-small"
+                    onclick="window.location.href='/question/{{quest['id']}}/tag/{{tag['tag_id']}}/delete';"
+                    type="submit">DEL</button>{% endfor%}</div>
+            {% endif %}
+            <div class="container3">
 
-                    <h2>Tags:{% for tag in tags %} {{tag['name']}}<button onclick="window.location.href='/question/{{quest['id']}}/tag/{{tag['tag_id']}}/delete';" type="submit">DEL</button>{% endfor%}</h2>
-                    {% endif %}
-                    <button onclick="window.location.href='/comment/{{ quest['id'] }}/add';" type="submit">Add comment</button>
-                    <button onclick="window.location.href='/question/{{ quest['id'] }}/new-tag';" type="submit">{%if tag%}SET{% else %}ADD{%endif%} TAG</button>
-                    {% if tags[0]['tag_id']!= None  %}
-                    <button onclick="window.location.href='/delete-tag/{{ quest['id'] }}';" type="submit">DELETE ALL TAGS</button>
-                    {% endif %}
-                    {% for comm in comment %}
-                    {% if comm["question_id"] == id %}
-                    <p>Comment: {{ comm['message'] }}
-                    <button onclick="window.location.href='/comment/{{ comm['id'] }}/delete/{{ quest['id'] }}';" type="submit">DEL</button>
-                    <button onclick="window.location.href='/comment/{{ comm['id'] }}/edit/{{ quest['id'] }}';" type="submit">EDIT</button>
-                    </p>
+                <button class="button-label" onclick="window.location.href='/question/{{ quest['id'] }}/new-tag';"
+                    type="submit">{%if tag%}SET{% else %}ADD{%endif%} TAG</button>
+                <button class="button-label" onclick="window.location.href='/delete-tag/{{ quest['id'] }}';"
+                    type="submit">DELETE ALL TAGS</button>
+                <button class="button-label" onclick="window.location.href='/comment/{{ quest['id'] }}/add';"
+                    type="submit">ADD COMMENT</button>
 
-                    {% endif %}
-                    {% endfor %}
-                        {% if quest['image'] %}
-                    <p><img alt="{{ quest['image'] }}" src="/static/img/question/{{ quest['image'] }}" style="height:300px"></p>
-                        {% endif %}
-                </fieldset>
             </div>
+        </div>
+        <div class="container">
+            <input type="checkbox" id="question-comments">
+            <label id="showmore" for="question-comments"></label>
+            <ul>
+                <!-- <h3 align="center" >QUESTION COMMENTS</h3> -->
+                {% for comm in comment %}
+                {% if comm["question_id"] == id %}
+                <li>
+                    <div class="story-comment">
+                        <div class="comment">
+                            {{ comm['message'] }}</div>
+                        <div class="comment-button-holder">
+                            <button class="button-label"
+                                onclick="window.location.href='/comment/{{ comm['id'] }}/delete/{{ quest['id'] }}';"
+                                type="submit">DEL</button>
+                            <button class="button-label"
+                                onclick="window.location.href='/comment/{{ comm['id'] }}/edit/{{ quest['id'] }}';"
+                                type="submit">EDIT</button>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </li>
+            </ul>
+        
+            <input type="checkbox" id="answers">
+            <label id="showmore-a" for="answers"></label>
+            <ul>
+                <!-- <h3 align="center">ANSWER SECTION</h3> -->
+                <li>
+                    <div class="story-comment">
+                        <!-- {% if quest['image'] %}
+                        <img alt="{{ quest['image'] }}" src="/static/img/question/{{ quest['image'] }}"
+                            style="height:300px">
+                        {% endif %} -->
                         {% for answ in answer %}
-                            {% if answ["question_id"] == id %}
-                        <fieldset>
-                            <div align="right" style="color:white;">
-                                <button onclick="window.location.href='/answer/{{ answ['id'] }}/vote_down/{{ quest['id'] }}';" class="button button1" type="submit" style="color: white; background-color: #820000;">&#9660</button>
-                                <button onclick="window.location.href='/answer/{{ answ['id'] }}/vote_up/{{ quest['id'] }}';" class="button button2" type="submit" style="color: white; background-color: #149000;">&#9650</button>
-                                Votes: {{ answ["vote_number"] }}
+                        {% if answ["question_id"] == id %}
+                        <div>
+                            <div class="container1">
+                                <div>
+                                    <button class="button-label"
+                                        onclick="window.location.href='/comment/{{ answ['id'] }}/add/{{ quest['id'] }}';"
+                                        type="submit">ADD COMMENT</button>
+                                    <button class="button-label"
+                                        onclick="window.location.href='/answer/{{ answ['id'] }}/delete/{{ quest['id'] }}';">DELETE
+                                        ANSWER</button>
+                                    <button class="button-label"
+                                        onclick="window.location.href='/answer/{{ answ['id'] }}/edit/{{ quest['id'] }}';">EDIT
+                                        ANSWER</button>
+                                </div>
                             </div>
-                        <p>{{ answ["message"] }}</p><br>
-                        <button onclick="window.location.href='/comment/{{ answ['id'] }}/add/{{ quest['id'] }}';" type="submit">Add comment</button>
+                            <div class="comment" style="padding:10px 0; font-size:30px;">
+                                {{ answ["message"] }}
+                            </div>
                             {% for comm in comment %}
                             {% if comm["answer_id"] == answ["id"] %}
-                            <p>Comment: {{ comm['message'] }}
-                            <button onclick="window.location.href='/comment/{{ comm['id'] }}/delete/{{ quest['id'] }}';" type="submit">DEL</button>
-                            <button onclick="window.location.href='/comment/{{ comm['id'] }}/edit/{{ quest['id'] }}';" type="submit">EDIT</button>
-                            </p>
+                            <div class="comment">{{ comm['message'] }}</div>
+                            <div class="comment-button-holder">
+                                <button class="button-label"
+                                    onclick="window.location.href='/comment/{{ comm['id'] }}/delete/{{ quest['id'] }}';"
+                                    type="submit">DEL</button>
+                                <button class="button-label"
+                                    onclick="window.location.href='/comment/{{ comm['id'] }}/edit/{{ quest['id'] }}';"
+                                    type="submit">EDIT</button>
+                            </div>
                             {% endif %}
                             {% endfor %}
-                                {% if answ["image"] %}
-                                <p><img src="/static/img/answer/{{ answ['image'] }}" style="width:200px"></p>
-                                {% endif %}
-                            <button onclick="window.location.href='/answer/{{ answ['id'] }}/delete/{{ quest['id'] }}';">Delete answer</button>
-                            <button onclick="window.location.href='/answer/{{ answ['id'] }}/edit/{{ quest['id'] }}';">Edit answer</button>
-                        </fieldset>
-
+                            {% if answ["image"] %}
+                            <img src="/static/img/answer/{{ answ['image'] }}" style="width:200px">
                             {% endif %}
+                        </div>
+                        <div class="container1">
+                            <div class="voter">
+                                <button
+                                    onclick="window.location.href='/answer/{{ answ['id'] }}/vote_up/{{ quest['id'] }}';"
+                                    class="vote_arrow_up" type="submit"></button>
+                                <button
+                                    onclick="window.location.href='/answer/{{ answ['id'] }}/vote_down/{{ quest['id'] }}';"
+                                    class="vote_arrow_down" type="submit"></button>
+                                <div class="count">
+                                    <div class="number">{{ answ["vote_number"] }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
                         {% endfor %}
-                    {% endif %}
-                    {% endfor %}
-            <div class="container">
-                <br>
-                    <button onclick="window.location.href='/question/{{id}}/new-answer';">New answer</button>
-                    <button onclick="window.location.href='/question/{{id}}/edit';">Edit question</button>
-                    <p align="right"><button onclick="window.location.href='/question/{{id}}/delete';">Delete question</button></p>
-            </div>
-        </fieldset>
-        <button onclick="window.location.href='/';">Go Back</button>
-    </body>
+                        {% endif %}
+                        {% endfor %}
+                        <div class="container2">
+                            <div>
+                                <button class="button-label"
+                                    onclick="window.location.href='/question/{{id}}/new-answer';">ANSWER
+                                    QUESTION</button>
+                                <button class="button-label"
+                                    onclick="window.location.href='/question/{{id}}/edit';">EDIT QUESTION</button>
+                                <button class="button-label"
+                                    onclick="window.location.href='/question/{{id}}/delete';">DELETE QUESTION</button>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+
 </html>
