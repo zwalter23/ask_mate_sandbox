@@ -116,7 +116,6 @@ def edit_answer(answer_id, question_id):
         print("DATACHECK:", question_id)
         return redirect(f"/question/{question_id}")
     answer = data_handler.get_answer(answer_id)[0]['message']
-    print("DATACHECK : ", answer)
     return render_template("edit_answer.html", answer=answer, answer_id=int(answer_id), question_id=int(question_id))
 
 
@@ -147,6 +146,21 @@ def answer_vote_down(answer_id, question_id):
 def answer_vote_up(answer_id, question_id):
     data_handler.edit_answer(answer_id, "upvote")
     return redirect(f"/question/{question_id}")
+
+
+@app.route("/question/<question_id>/new-tag", methods=["GET","POST"])
+def add_tag_to_question(question_id):
+    if request.method == "POST":
+        pass
+    tags=data_handler.reader("tag")
+    return render_template("new_tag.html", tags=tags, id=question_id)
+
+
+@app.route("/question/<id>/add-new-tag", methods=["GET","POST"])
+def add_new_tag(id):
+    new_tag = request.form['new_tag']
+    data_handler.tag(new_tag)
+    return redirect(f"/question/{id}/new-tag")
 
 
 @app.route("/sort", methods=["GET", "POST"])
