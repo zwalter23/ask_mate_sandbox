@@ -216,9 +216,31 @@ def sort(cursor: RealDictCursor, x):
 
 
 @connect_database.connection_handler
-def search_question(cursor: RealDictCursor, text):
+def search_text(cursor: RealDictCursor, text):
     cursor.execute(f"SELECT * FROM question WHERE message LIKE '%{text}%' OR title LIKE '%{text}%'")
-    return cursor.fetchall()
+    questions = cursor.fetchall()
+    cursor.execute(f"SELECT * FROM answer WHERE message LIKE '%{text}%'")
+    answers = cursor.fetchall()
+    return questions, answers
+
+
+def highlight(text, question, answer):
+    for quest in question:
+        if re.findall(text, quest['title']):
+            titles = re.sub(text, f'<span style="font-weight:bold;background-color:#99ff66">{text}</span>', quest['title'])
+            title = quest["title"].replace(quest['title'], titles)
+            quest.update({'title': title})
+        if re.findall(text, quest['message']):
+            message = re.sub(text, f'<span style="font-weight:bold;background-color:#99ff66">{text}</span>', quest['message'])
+            mess = quest["message"].replace(quest['message'], message)
+            quest.update({'message': mess})
+
+    for answ in answer:
+        if re.findall(text, answ['message']):
+            message = re.sub(text, f'<span style="font-weight:bold;background-color:#99ff66">{text}</span>', answ['message'])
+            mess = answ["message"].replace(answ['message'], message)
+            answ.update({'message': mess})
+    return question, answer
 
 
 def allowed_file(filename):

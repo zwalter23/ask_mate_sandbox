@@ -26,8 +26,9 @@ def list_last_5():
 def search():
     text = request.query_string
     text = text.decode().split("=")[1]
-    questions = data_handler.search_question(text)
-    return render_template("list.html", questions=questions, searched=1)
+    questions, answers = data_handler.search_text(text)
+    questions, answers = data_handler.highlight(text, questions, answers)
+    return render_template("search.html", questions=questions, answers=answers, text=text)
 
 
 @app.route("/visitor/<question_id>")
