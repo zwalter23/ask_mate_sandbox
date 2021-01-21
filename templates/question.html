@@ -18,7 +18,7 @@
                     <h2>Tag:{{tag}}</h2>
                     {% endif %}
                     <button onclick="window.location.href='/comment/{{ quest['id'] }}/add';" type="submit">Add comment</button>
-                    <button onclick="window.location.href='/question/{{quest['id']}}/new-tag';" type="submit">Add tag</button>
+                    <button onclick="window.location.href='/question/{{ quest['id'] }}/new-tag';" type="submit">Add tag</button>
                     {% for comm in comment %}
                     {% if comm["question_id"] == id %}
                     <p>Comment: {{ comm['message'] }}
@@ -55,6 +55,7 @@
                                 <p><img src="/static/img/answer/{{ answ['image'] }}" style="width:200px"></p>
                                 {% endif %}
                             <button onclick="window.location.href='/answer/{{ answ['id'] }}/delete/{{ quest['id'] }}';">Delete answer</button>
+                            <button onclick="window.location.href='/answer/{{ answ['id'] }}/edit/{{ quest['id'] }}';">Edit answer</button>
                         </fieldset>
 
                             {% endif %}
