@@ -36,8 +36,22 @@ def writer(cursor: RealDictCursor, data, table):
                            VALUES(%s, NULL, %s, %s, %s)"""
             values = (int(data['question_id']), data['message'], data['submission_time'],
                       data['edited_count'])
+
+
     cursor.execute(query, values)
 
+@connect_database.connection_handler
+def tag(cursor: RealDictCursor, data):
+    query = f"""INSERT INTO tag (name)
+                       VALUES('{data}')"""
+    cursor.execute(query)
+
+
+@connect_database.connection_handler
+def get_question_tag(cursor: RealDictCursor, id):
+    query = f"""SELECT name FROM tag FULL JOIN question_tag ON tag.id = question_tag.tag_id FULL JOIN question ON question_tag.question_id = question.id WHERE question.id='{id}'"""
+    cursor.execute(query)
+    return cursor.fetchone()
 
 @connect_database.connection_handler
 def reader(cursor: RealDictCursor, table):
