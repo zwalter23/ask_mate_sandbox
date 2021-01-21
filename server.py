@@ -165,6 +165,13 @@ def delete_tag(question_id):
     data_handler.delete_tag(question_id)
     return redirect(f"/question/{question_id}")
 
+@app.route("/question/<question_id>/delete-tag", methods=["POST","GET"])
+def delete_tag_from_list(question_id):
+    if request.method == "POST":
+        tag_id = data_handler.get_tag_id(request.form['tags'])['id']
+        data_handler.delete_tag_from_list(tag_id)
+        return redirect(f"/question/{question_id}/new-tag")
+
 
 @app.route("/question/<id>/add-new-tag", methods=["GET","POST"])
 def add_new_tag(id):

@@ -77,10 +77,16 @@ def delete_one_tag(cursor: RealDictCursor, question_id,tag_id):
     cursor.execute(f"DELETE FROM question_tag WHERE question_id='{question_id}' AND tag_id='{tag_id}'")
 
 @connect_database.connection_handler
+def delete_tag_from_list(cursor: RealDictCursor, tag_id):
+    cursor.execute(f"DELETE FROM question_tag WHERE tag_id='{tag_id}'")
+    cursor.execute(f"DELETE FROM tag WHERE id='{tag_id}'")
+
+@connect_database.connection_handler
 def link_tag(cursor: RealDictCursor, question_id, tag_id):
     cursor.execute(f"""
                         INSERT INTO question_tag (question_id, tag_id)
                         VALUES ('{question_id}','{tag_id}')
+                        ON CONFLICT DO NOTHING
                        """)
 
 @connect_database.connection_handler

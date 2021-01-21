@@ -20,7 +20,9 @@
                     {% endif %}
                     <button onclick="window.location.href='/comment/{{ quest['id'] }}/add';" type="submit">Add comment</button>
                     <button onclick="window.location.href='/question/{{ quest['id'] }}/new-tag';" type="submit">{%if tag%}SET{% else %}ADD{%endif%} TAG</button>
+                    {% if tags[0]['tag_id']!= None  %}
                     <button onclick="window.location.href='/delete-tag/{{ quest['id'] }}';" type="submit">DELETE ALL TAGS</button>
+                    {% endif %}
                     {% for comm in comment %}
                     {% if comm["question_id"] == id %}
                     <p>Comment: {{ comm['message'] }}
