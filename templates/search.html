@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search</title>
+</head>
+<body>
+<a href="/">Home</a>
+<form action="/search?q=<search phrase>" method="get">
+    <input type="text" name="search phrase" id="search phrase">
+    <button type="submit">Search</button>
+</form>
+<h2>Search: {{ text }}</h2>
+<div>
+    {% if questions %}
+    <p>Found questions:</p>
+    {% for quest in questions %}
+        <ul>
+            <li><h3><a href="/question/{{ quest['id'] }}">&#128214;</a>{{ quest['title']|safe }}</h3>
+                <p>{{ quest['message']|safe }}</p>
+            </li>
+        </ul>
+    {% endfor %}
+    {% else %}
+    No question found
+    {% endif %}
+        <hr>
+    {% if answers %}
+    <p>Found answers :</p>
+    {% for answ in answers %}
+        <ul>
+            <li><a href="/question/{{ answ['question_id'] }}">&#128214;</a>{{ answ['message']|safe }}</li>
+        </ul>
+    {% endfor %}
+    {% else %}
+    No answer found
+    {% endif %}
+</div>
+</body>
+</html>
