@@ -5,19 +5,23 @@
     <title>New tag</title>
 </head>
 <body>
+<h1>Question: {{ question['title']}}</h1>
+{% if question_tag %}
+<h2>Linked tag:{%for tag in tags%}{{tag['name']}} {%endfor%}</h2>
+{% endif %}
 <form action="/question/{{id}}/new-tag" method="post">
-Existing tags:
+Change tag:
     <select id="tags" name="tags">
         {% for tag in tags %}
             <option value = "{{tag['name']}}" >{{tag['name']}}</option>
         {% endfor %}
     </select>
-    <input type="submit" value="SET">
+    <input type="submit" value="ADD">
 </form>
 <br>
 <form action="/question/{{id}}/add-new-tag" method="post">
     <label for="new_tag">Add new tag:</label>
-    <input type="text" name="new_tag" id="new_tag"></input>
+    <input type="text" name="new_tag" id="new_tag" required></input>
     <input type="submit" value="Send"></input>
 </form>
 </body>

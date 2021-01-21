@@ -14,11 +14,13 @@
                         {% if quest["id"] == id %}
                     <legend align="center"><u><h1><b>{{ quest["title"] }}</b></h1></u></legend>
                     <h3>{{ quest["message"] }}</h3>
-                    {% if tag %}
-                    <h2>Tag:{{tag}}</h2>
+                    {% if tags[0]['tag_id']!= None %}
+
+                    <h2>Tags:{% for tag in tags %} {{tag['name']}}<button onclick="window.location.href='/question/{{quest['id']}}/tag/{{tag['tag_id']}}/delete';" type="submit">DEL</button>{% endfor%}</h2>
                     {% endif %}
                     <button onclick="window.location.href='/comment/{{ quest['id'] }}/add';" type="submit">Add comment</button>
-                    <button onclick="window.location.href='/question/{{ quest['id'] }}/new-tag';" type="submit">Add tag</button>
+                    <button onclick="window.location.href='/question/{{ quest['id'] }}/new-tag';" type="submit">{%if tag%}SET{% else %}ADD{%endif%} TAG</button>
+                    <button onclick="window.location.href='/delete-tag/{{ quest['id'] }}';" type="submit">DELETE ALL TAGS</button>
                     {% for comm in comment %}
                     {% if comm["question_id"] == id %}
                     <p>Comment: {{ comm['message'] }}

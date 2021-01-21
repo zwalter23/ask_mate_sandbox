@@ -47,16 +47,49 @@ def tag(cursor: RealDictCursor, data):
 
 
 @connect_database.connection_handler
-def get_question_tag(cursor: RealDictCursor, id):
-    query = f"""SELECT name FROM tag FULL JOIN question_tag ON tag.id = question_tag.tag_id FULL JOIN question ON question_tag.question_id = question.id WHERE question.id='{id}'"""
+def get_question_tags(cursor: RealDictCursor, id):
+    query = f"""SELECT name,tag_id FROM tag FULL JOIN question_tag ON tag.id = question_tag.tag_id FULL JOIN question ON question_tag.question_id = question.id WHERE question.id='{id}'"""
+    cursor.execute(query)
+    return cursor.fetchall()
+
+@connect_database.connection_handler
+def get_tag_id(cursor: RealDictCursor, tag):
+    query = f"""SELECT id FROM tag WHERE name='{tag}'"""
     cursor.execute(query)
     return cursor.fetchone()
-
 
 @connect_database.connection_handler
 def reader(cursor: RealDictCursor, table):
     cursor.execute(f"SELECT * FROM {table} ORDER BY id DESC")
     return cursor.fetchall()
+
+@connect_database.connection_handler
+def get_question(cursor: RealDictCursor, id):
+    cursor.execute(f"SELECT * FROM question WHERE id = '{id}'")
+    return cursor.fetchone()
+
+@connect_database.connection_handler
+def delete_tag(cursor: RealDictCursor, question_id):
+    cursor.execute(f"DELETE FROM question_tag WHERE question_id='{question_id}'")
+
+@connect_database.connection_handler
+def delete_one_tag(cursor: RealDictCursor, question_id,tag_id):
+    cursor.execute(f"DELETE FROM question_tag WHERE question_id='{question_id}' AND tag_id='{tag_id}'")
+
+@connect_database.connection_handler
+def link_tag(cursor: RealDictCursor, question_id, tag_id):
+    cursor.execute(f"""
+                        INSERT INTO question_tag (question_id, tag_id)
+                        VALUES ('{question_id}','{tag_id}')
+                       """)
+
+@connect_database.connection_handler
+def update_tag(cursor: RealDictCursor, question_id, tag_id):
+    cursor.execute(f"""
+                        UPDATE question_tag
+                        SET tag_id='{tag_id}'
+                        WHERE question_id='{question_id}'""")
+
 
 
 @connect_database.connection_handler

@@ -38,11 +38,11 @@ def visitor(question_id):
 
 @app.route("/question/<question_id>", methods=["GET", "POST"])
 def quest(question_id):
-    tag = data_handler.get_question_tag(question_id)['name']
+    tags = data_handler.get_question_tags(question_id)
     question = data_handler.reader("question")
     answer = data_handler.reader("answer")
     comment = data_handler.reader("comment")
-    return render_template("question.html", question=question, answer=answer, comment=comment, tag=tag, id=int(question_id))
+    return render_template("question.html", question=question, answer=answer, comment=comment, tags=tags, id=int(question_id))
 
 
 @app.route("/add-question", methods=["GET", "POST"])
@@ -151,9 +151,18 @@ def answer_vote_up(answer_id, question_id):
 @app.route("/question/<question_id>/new-tag", methods=["GET","POST"])
 def add_tag_to_question(question_id):
     if request.method == "POST":
-        pass
+        tag_id = data_handler.get_tag_id(request.form['tags'])['id']
+        data_handler.link_tag(question_id,tag_id)
+        return redirect(f"/question/{question_id}")
+    question = data_handler.get_question(question_id)
+    question_tag = data_handler.get_question_tags(question_id)
     tags=data_handler.reader("tag")
-    return render_template("new_tag.html", tags=tags, id=question_id)
+    return render_template("new_tag.html", tags=tags, id=question_id,question=question,question_tag=question_tag)
+
+@app.route("/delete-tag/<question_id>")
+def delete_tag(question_id):
+    data_handler.delete_tag(question_id)
+    return redirect(f"/question/{question_id}")
 
 
 @app.route("/question/<id>/add-new-tag", methods=["GET","POST"])
@@ -162,6 +171,12 @@ def add_new_tag(id):
     data_handler.tag(new_tag)
     return redirect(f"/question/{id}/new-tag")
 
+
+
+@app.route("/question/<question_id>/tag/<tag_id>/delete")
+def delete_one_tag(question_id,tag_id):
+    data_handler.delete_one_tag(question_id,tag_id)
+    return redirect(f"/question/{question_id}")
 
 @app.route("/sort", methods=["GET", "POST"])
 def sort():
