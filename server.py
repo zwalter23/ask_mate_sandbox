@@ -98,7 +98,7 @@ def edit_quest(id):
     title = request.form["title"]
     message = request.form["message"]
     question = {"id": id, "title": title, "message": message}
-    data_handler.edit_question(question)
+    data_handler.update(question,"question")
     return redirect(f"/question/{id}")
 
 
@@ -111,8 +111,8 @@ def delete_question(question_id):
 @app.route("/answer/<answer_id>/edit/<question_id>", methods=["GET", "POST"])
 def edit_answer(answer_id, question_id):
     if request.method == "POST":
-        text = request.form.get("text")
-        data_handler.update_answer(answer_id, text)
+        data = {"id": answer_id, "message": request.form.get("text")}
+        data_handler.update(data,"answer")
         print("DATACHECK:", question_id)
         return redirect(f"/question/{question_id}")
     answer = data_handler.get_answer(answer_id)[0]['message']
@@ -222,8 +222,8 @@ def delete_comment(comment_id, question_id):
 @app.route("/comment/<comment_id>/edit/<question_id>", methods=["GET", "POST"])
 def edit_comment(comment_id, question_id):
     if request.method == "POST":
-        comment = request.form.get("comment")
-        data_handler.edit_comment({"id":comment_id, "message":comment})
+        data = {"id": comment_id, "message": request.form.get("comment")}
+        data_handler.update(data,"comment")
         return redirect(f"/question/{question_id}")
     comment = data_handler.reader("comment")
     return render_template("edit_comment.html", comment=comment, comment_id=int(comment_id), question_id=question_id)

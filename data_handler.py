@@ -98,28 +98,12 @@ def get_answer(cursor:RealDictCursor, id):
 
 
 @connect_database.connection_handler
-def edit_question(cursor:RealDictCursor, data):
-    cursor.execute("""UPDATE question 
-                SET title = %s, message = %s
-                WHERE id = %s
-    """, (data['title'], data['message'], data['id']))
-
-
-@connect_database.connection_handler
-def edit_answer(cursor:RealDictCursor, data):
-    cursor.execute(f"""UPDATE question 
-                SET message = '{data['message']}'
-                WHERE id = '{data['id']}'
-        """)
-
-
-@connect_database.connection_handler
-def edit_comment(cursor:RealDictCursor, data):
-    cursor.execute(f"""UPDATE comment 
-                    SET message = '{data['message']}'
-                    WHERE id = '{data['id']}'
-            """)
-
+def update(cursor: RealDictCursor, data, table):
+    cursor.execute(f"""
+                        UPDATE {table}
+                        SET {f"title = '{data['title']}', " if data['title'] else ''} message = '{data['message']}' 
+                        WHERE id = '{data['id']}'
+                    """)
 
 @connect_database.connection_handler
 def view_count(cursor:RealDictCursor, id):
@@ -130,16 +114,11 @@ def view_count(cursor:RealDictCursor, id):
 
 
 @connect_database.connection_handler
-def vote(cursor:RealDictCursor, id,table, modify):
+def vote(cursor: RealDictCursor, id, table, modify):
         cursor.execute(f""" UPDATE {table}  
                             SET vote_number = vote_number {modify} 1
                             WHERE id = '{id}'
                         """)
-
-@connect_database.connection_handler
-def update_answer(cursor:RealDictCursor, id, data):
-    cursor.execute(f"UPDATE answer SET message = '{data}' WHERE id = {id}")
-
 
 @connect_database.connection_handler
 def delete_answer(cursor:RealDictCursor, answer_id):
