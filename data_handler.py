@@ -1,15 +1,8 @@
-import csv
 import os
 import re
-from typing import List, Dict
-
-from psycopg2 import sql
 from psycopg2.extras import RealDictCursor
-import random
 import connect_database
-#id,submission_time,view_number,vote_number,title,message,image
-fieldnames_q = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
-fieldnames_a = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
+
 ALLOWED_EXTENSIONS = {'png', 'jpg'}
 
 
@@ -40,10 +33,11 @@ def tag(cursor: RealDictCursor, data):
 
 
 @connect_database.connection_handler
-def get_question_tags(cursor: RealDictCursor, id):
-    query = f"""SELECT name,tag_id FROM tag FULL JOIN question_tag ON tag.id = question_tag.tag_id FULL JOIN question ON question_tag.question_id = question.id WHERE question.id='{id}'"""
+def get_question_tags(cursor: RealDictCursor, question_id):
+    query = f"""SELECT name,tag_id FROM tag FULL JOIN question_tag ON tag.id = question_tag.tag_id FULL JOIN question ON question_tag.question_id = question.id WHERE question.id='{question_id}'"""
     cursor.execute(query)
     return cursor.fetchall()
+
 
 @connect_database.connection_handler
 def get_tag_id(cursor: RealDictCursor, tag):
@@ -51,28 +45,34 @@ def get_tag_id(cursor: RealDictCursor, tag):
     cursor.execute(query)
     return cursor.fetchone()
 
+
 @connect_database.connection_handler
 def reader(cursor: RealDictCursor, table):
     cursor.execute(f"SELECT * FROM {table} ORDER BY id DESC")
     return cursor.fetchall()
 
+
 @connect_database.connection_handler
-def get_question(cursor: RealDictCursor, id):
-    cursor.execute(f"SELECT * FROM question WHERE id = '{id}'")
+def get_question(cursor: RealDictCursor, question_id):
+    cursor.execute(f"SELECT * FROM question WHERE id = '{question_id}'")
     return cursor.fetchone()
+
 
 @connect_database.connection_handler
 def delete_tag(cursor: RealDictCursor, question_id):
     cursor.execute(f"DELETE FROM question_tag WHERE question_id='{question_id}'")
 
+
 @connect_database.connection_handler
-def delete_one_tag(cursor: RealDictCursor, question_id,tag_id):
+def delete_one_tag(cursor: RealDictCursor, question_id, tag_id):
     cursor.execute(f"DELETE FROM question_tag WHERE question_id='{question_id}' AND tag_id='{tag_id}'")
+
 
 @connect_database.connection_handler
 def delete_tag_from_list(cursor: RealDictCursor, tag_id):
     cursor.execute(f"DELETE FROM question_tag WHERE tag_id='{tag_id}'")
     cursor.execute(f"DELETE FROM tag WHERE id='{tag_id}'")
+
 
 @connect_database.connection_handler
 def link_tag(cursor: RealDictCursor, question_id, tag_id):
@@ -82,6 +82,7 @@ def link_tag(cursor: RealDictCursor, question_id, tag_id):
                         ON CONFLICT DO NOTHING
                        """)
 
+
 @connect_database.connection_handler
 def update_tag(cursor: RealDictCursor, question_id, tag_id):
     cursor.execute(f"""
@@ -90,10 +91,9 @@ def update_tag(cursor: RealDictCursor, question_id, tag_id):
                         WHERE question_id='{question_id}'""")
 
 
-
 @connect_database.connection_handler
-def get_answer(cursor:RealDictCursor, id):
-    cursor.execute(f"SELECT message FROM answer WHERE id = {id}")
+def get_answer(cursor: RealDictCursor, message_id):
+    cursor.execute(f"SELECT message FROM answer WHERE id = {message_id}")
     return cursor.fetchall()
 
 
@@ -105,23 +105,25 @@ def update(cursor: RealDictCursor, data, table):
                         WHERE id = '{data['id']}'
                     """)
 
+
 @connect_database.connection_handler
-def view_count(cursor:RealDictCursor, id):
+def view_count(cursor: RealDictCursor, question_id):
     cursor.execute(f"""UPDATE question 
                 SET view_number = view_number + 1
-                WHERE id = '{id}'
+                WHERE id = '{question_id}'
                     """)
 
 
 @connect_database.connection_handler
-def vote(cursor: RealDictCursor, id, table, modify):
-        cursor.execute(f""" UPDATE {table}  
-                            SET vote_number = vote_number {modify} 1
-                            WHERE id = '{id}'
-                        """)
+def vote(cursor: RealDictCursor, column_id, table, modify):
+    cursor.execute(f""" UPDATE {table}  
+                        SET vote_number = vote_number {modify} 1
+                        WHERE id = '{column_id}'
+                    """)
+
 
 @connect_database.connection_handler
-def delete_answer(cursor:RealDictCursor, answer_id):
+def delete_answer(cursor: RealDictCursor, answer_id):
     cursor.execute(f"SELECT image FROM answer WHERE id = {answer_id}")
     img = cursor.fetchall()
     try:
@@ -135,8 +137,8 @@ def delete_answer(cursor:RealDictCursor, answer_id):
 
 
 @connect_database.connection_handler
-def delete(cursor:RealDictCursor, id):
-    cursor.execute(f"SELECT image FROM question WHERE id = {id}")
+def delete(cursor: RealDictCursor, image_id):
+    cursor.execute(f"SELECT image FROM question WHERE id = {image_id}")
     quest_img = cursor.fetchall()
     try:
         quest_img = [pic for pic in quest_img][0]['image']

@@ -80,7 +80,7 @@ def save():
         f = request.files["file"]
         if f:
             f.filename = "id"+str(id)+f.filename
-            f.save(os.path.join(app.config['UPLOAD_FOLDER'],"question", f.filename))
+            f.save(os.path.join(app.config['UPLOAD_FOLDER'], "question", f.filename))
         question = {"submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "view_number": 0,
                     "vote_number": 0, "title": title, "message": message, "image": f.filename}
         data_handler.writer(question, "question")
@@ -90,7 +90,7 @@ def save():
 @app.route("/question/<question_id>/edit")
 def edit_question(question_id):
     question = data_handler.reader("question")
-    return  render_template("edit.html", question=question, id=int(question_id))
+    return render_template("edit.html", question=question, id=int(question_id))
 
 
 @app.route("/edit/<id>", methods=["GET", "POST"])
@@ -98,7 +98,7 @@ def edit_quest(id):
     title = request.form["title"]
     message = request.form["message"]
     question = {"id": id, "title": title, "message": message}
-    data_handler.update(question,"question")
+    data_handler.update(question, "question")
     return redirect(f"/question/{id}")
 
 
@@ -112,7 +112,7 @@ def delete_question(question_id):
 def edit_answer(answer_id, question_id):
     if request.method == "POST":
         data = {"id": answer_id, "message": request.form.get("text")}
-        data_handler.update(data,"answer")
+        data_handler.update(data, "answer")
         print("DATACHECK:", question_id)
         return redirect(f"/question/{question_id}")
     answer = data_handler.get_answer(answer_id)[0]['message']
@@ -127,44 +127,47 @@ def delete_answer(answer_id, question_id):
 
 @app.route("/question/<question_id>/vote_down", methods=["GET", "POST"])
 def vote_down(question_id):
-    data_handler.vote(question_id,"question", "-")
+    data_handler.vote(question_id, "question", "-")
     return redirect("/list")
+
 
 @app.route("/question/<question_id>/vote_up", methods=["GET", "POST"])
 def vote_up(question_id):
-    data_handler.vote(question_id,"question", "+")
+    data_handler.vote(question_id, "question", "+")
     return redirect("/list")
 
 
 @app.route("/answer/<answer_id>/vote_down/<question_id>", methods=["GET", "POST"])
 def answer_vote_down(answer_id, question_id):
-    data_handler.vote(answer_id,"answer", "-")
+    data_handler.vote(answer_id, "answer", "-")
     return redirect(f"/question/{question_id}")
 
 
 @app.route("/answer/<answer_id>/vote_up/<question_id>", methods=["GET", "POST"])
 def answer_vote_up(answer_id, question_id):
-    data_handler.vote(answer_id,"answer", "+")
+    data_handler.vote(answer_id, "answer", "+")
     return redirect(f"/question/{question_id}")
 
 
-@app.route("/question/<question_id>/new-tag", methods=["GET","POST"])
+@app.route("/question/<question_id>/new-tag", methods=["GET", "POST"])
 def add_tag_to_question(question_id):
     if request.method == "POST":
         tag_id = data_handler.get_tag_id(request.form['tags'])['id']
-        data_handler.link_tag(question_id,tag_id)
+        data_handler.link_tag(question_id, tag_id)
         return redirect(f"/question/{question_id}")
     question = data_handler.get_question(question_id)
     question_tag = data_handler.get_question_tags(question_id)
-    tags=data_handler.reader("tag")
-    return render_template("new_tag.html", tags=tags, id=question_id,question=question,question_tag=question_tag)
+    tags = data_handler.reader("tag")
+    return render_template("new_tag.html", tags=tags, id=question_id, question=question, question_tag=question_tag)
+
 
 @app.route("/delete-tag/<question_id>")
 def delete_tag(question_id):
     data_handler.delete_tag(question_id)
     return redirect(f"/question/{question_id}")
 
-@app.route("/question/<question_id>/delete-tag", methods=["POST","GET"])
+
+@app.route("/question/<question_id>/delete-tag", methods=["POST", "GET"])
 def delete_tag_from_list(question_id):
     if request.method == "POST":
         tag_id = data_handler.get_tag_id(request.form['tags'])['id']
@@ -172,23 +175,23 @@ def delete_tag_from_list(question_id):
         return redirect(f"/question/{question_id}/new-tag")
 
 
-@app.route("/question/<id>/add-new-tag", methods=["GET","POST"])
+@app.route("/question/<id>/add-new-tag", methods=["GET", "POST"])
 def add_new_tag(id):
     new_tag = request.form['new_tag']
     data_handler.tag(new_tag)
     return redirect(f"/question/{id}/new-tag")
 
 
-
 @app.route("/question/<question_id>/tag/<tag_id>/delete")
-def delete_one_tag(question_id,tag_id):
-    data_handler.delete_one_tag(question_id,tag_id)
+def delete_one_tag(question_id, tag_id):
+    data_handler.delete_one_tag(question_id, tag_id)
     return redirect(f"/question/{question_id}")
+
 
 @app.route("/sort", methods=["GET", "POST"])
 def sort():
-     sorting = data_handler.sort(request.query_string.decode())
-     return render_template("list.html", questions=sorting)
+    sorting = data_handler.sort(request.query_string.decode())
+    return render_template("list.html", questions=sorting)
 
 
 @app.route("/comment/<question_id>/add", methods=["GET", "POST"])
@@ -223,10 +226,11 @@ def delete_comment(comment_id, question_id):
 def edit_comment(comment_id, question_id):
     if request.method == "POST":
         data = {"id": comment_id, "message": request.form.get("comment")}
-        data_handler.update(data,"comment")
+        data_handler.update(data, "comment")
         return redirect(f"/question/{question_id}")
     comment = data_handler.reader("comment")
     return render_template("edit_comment.html", comment=comment, comment_id=int(comment_id), question_id=question_id)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
