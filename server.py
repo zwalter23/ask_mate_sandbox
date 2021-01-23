@@ -24,8 +24,7 @@ def list_last_5():
 
 @app.route("/search")
 def search():
-    text = request.query_string
-    text = text.decode().split("=")[1]
+    text = request.query_string.decode().split("=")[1]
     questions, answers = data_handler.search_text(text)
     questions, answers = data_handler.highlight(text, questions, answers)
     return render_template("search.html", questions=questions, answers=answers, text=text)
@@ -188,10 +187,8 @@ def delete_one_tag(question_id,tag_id):
 
 @app.route("/sort", methods=["GET", "POST"])
 def sort():
-     sorting = request.query_string
-     sorting = sorting.decode()
-     sorted = data_handler.sort(sorting)
-     return render_template("list.html", questions=sorted)
+     sorting = data_handler.sort(request.query_string.decode())
+     return render_template("list.html", questions=sorting)
 
 
 @app.route("/comment/<question_id>/add", methods=["GET", "POST"])

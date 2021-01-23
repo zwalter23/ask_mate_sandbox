@@ -182,9 +182,9 @@ def delete_comment(cursor: RealDictCursor, id):
 
 @connect_database.connection_handler
 def sort(cursor: RealDictCursor, x):
-    d = re.split("=|&", x)[3]
-    y = re.split("=|&", x)[1]
-    cursor.execute(f"SELECT * FROM question ORDER BY {y} {d.upper()}")
+    order = re.split("=|&", x)[3]
+    order_by = re.split("=|&", x)[1]
+    cursor.execute(f"SELECT * FROM question ORDER BY {order_by} {order.upper()}")
     return cursor.fetchall()
 
 
