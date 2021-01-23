@@ -16,27 +16,20 @@ ALLOWED_EXTENSIONS = {'png', 'jpg'}
 @connect_database.connection_handler
 def writer(cursor: RealDictCursor, data, table):
     if table == 'question':
-        query = f"""INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
-                       VALUES (%s, %s, %s, %s, %s, %s)"""
-        values = (data['submission_time'], data['view_number'], data['vote_number'], data['title'],
-                data['message'], data['image'])
+        cursor.execute(f"""
+                            INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
+                            VALUES ('{data['submission_time']}', '{data['view_number']}', '{data['vote_number']}', '{data['title']}', '{data['message']}', '{data['image']}')
+                        """)
     elif table == 'answer':
-        query = f"""INSERT INTO answer (submission_time, vote_number, question_id, message, image)
-                       VALUES(%s, %s, %s, %s, %s)"""
-        values = (data['submission_time'], data['vote_number'], data['question_id'], data['message'], data['image'])
+        cursor.execute(f"""
+                            INSERT INTO answer (submission_time, vote_number, question_id, message, image)
+                            VALUES('{data['submission_time']}', '{data['vote_number']}', '{data['question_id']}', '{data['message']}', '{data['image']}')
+                        """)
     elif table == 'comment':
-        if data['question_id'] == 'NULL':
-            query = f"""INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count)
-                           VALUES(NULL, %s, %s, %s, %s)"""
-            values = (int(data['answer_id']), data['message'], data['submission_time'],
-                      data['edited_count'])
-        else:
-            print(data)
-            query = f"""INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count)
-                           VALUES(%s, NULL, %s, %s, %s)"""
-            values = (int(data['question_id']), data['message'], data['submission_time'],
-                      data['edited_count'])
-    cursor.execute(query, values)
+        cursor.execute(f"""
+                            INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count)
+                            VALUES({data['question_id']}, {data['answer_id']}, '{data['message']}', '{data['submission_time']}',  '{data['edited_count']}')
+                        """)
 
 
 @connect_database.connection_handler

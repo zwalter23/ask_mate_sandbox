@@ -198,7 +198,7 @@ def sort():
 def add_question_comment(question_id):
     if request.method == "POST":
         comment = request.form.get('comment')
-        data = {"question_id": question_id, "message": comment,
+        data = {"question_id": question_id, "answer_id": 'NULL', "message": comment,
                 "submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "edited_count": 0}
         data_handler.writer(data, "comment")
         return redirect(f"/question/{question_id}")
