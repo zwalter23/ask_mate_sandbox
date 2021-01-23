@@ -137,37 +137,11 @@ def view_count(cursor:RealDictCursor, id):
 
 
 @connect_database.connection_handler
-def edit(cursor:RealDictCursor, id, modify):
-    if modify =="downvote":
-        cursor.execute(f""" UPDATE question  
-                            SET vote_number = vote_number - 1
+def vote(cursor:RealDictCursor, id,table, modify):
+        cursor.execute(f""" UPDATE {table}  
+                            SET vote_number = vote_number {modify} 1
                             WHERE id = '{id}'
                         """)
-    elif modify == "upvote":
-        cursor.execute(f""" UPDATE question  
-                            SET vote_number = vote_number + 1
-                            WHERE id = '{id}'
-                        """)
-    elif modify == "view_count":
-        cursor.execute(f"""UPDATE question 
-                SET view_number = view_number + 1
-                WHERE id = '{id}'
-                    """)
-
-
-@connect_database.connection_handler
-def edit_answer(cursor:RealDictCursor, id, modify):
-    if modify =="downvote":
-        cursor.execute(f""" UPDATE answer  
-                            SET vote_number = vote_number - 1
-                            WHERE id = '{id}'
-                        """)
-    elif modify == "upvote":
-        cursor.execute(f""" UPDATE answer  
-                            SET vote_number = vote_number + 1
-                            WHERE id = '{id}'
-                        """)
-
 
 @connect_database.connection_handler
 def update_answer(cursor:RealDictCursor, id, data):
