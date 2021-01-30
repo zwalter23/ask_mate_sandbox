@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Edit question</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
+    </head>
+    <body>
+        <div class="header">
+            <div class="new-title">
+                EDIT QUESTION
+            </div>
+        </div>
+        <div class="list">
+            {% for row in question %}
+            {% if row["id"] == id %}
+            <form action="/edit/{{ row['id'] }}" method="post">
+                <div class="textarea">
+                    <label for="title"></label>
+                    <textarea name="title" rows="20" cols="80">{{ row["title"] }}</textarea>
+                </div>
+                <div class="textarea">
+                    <label for="message"></label>
+                    <textarea name="message" rows="20" cols="107">{{ row["message"] }}</textarea>
+                </div>
+                <div class="button-holder">
+                    <button class="button-label" type="submit">EDIT QUESTION</button>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </form>
+        </div>
+    </body>
+</html>

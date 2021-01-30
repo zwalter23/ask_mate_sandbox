@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>New tag</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body>
+        <div class="header">
+            <div class="question-title">
+                {{ question['title']}}
+            </div>
+            <div class="button-holder-home">
+                <a href="/"><button class="home-button" >HOME</button></a>
+            </div>
+        </div>
+        <div class="blur">
+            <div class="button-holder">
+                {% if question_tag[0]['name'] != none %}
+                <span class="tired">LINKED TAGS: {%for tag in question_tag%}{{tag['name']}} {%endfor%}</span>
+                {% endif %}
+                {% if tags %}
+                    <form action="/question/{{id}}/new-tag" method="post">
+                    <span class="tired">CHANGE TAG:</span>
+                    <span><select id="tags" name="tags">
+                            {% for tag in tags %}
+                                <option value = "{{tag['name']}}" >{{tag['name']}}</option>
+                            {% endfor %}
+                        </select></span>
+                        <input class="button-small" type="submit" formaction="/question/{{id}}/delete-tag" value="DEL">
+                        <input class="button-small" type="submit" value="ADD">
+                    </form>
+                    <form action="/question/{{id}}/add-new-tag" method="post">
+                        <label for="new_tag">ADD NEW TAG:</label>
+                        <input type="text" name="new_tag" id="new_tag" required>
+                        <input class="button-small" type="submit" value="Send">
+                    </form>
+                    {% endif %}
+            </div>
+        </div>
+    </body>
+</html>

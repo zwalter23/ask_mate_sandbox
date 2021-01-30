@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Add comment</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body>
+        <div class="header">
+            <div class="new-title">
+                ADD COMMENT
+            </div>
+        </div>
+        <div class="blur">
+            <div class="button-holder">
+                <form action="/comment/{{ answer_id }}/add/{{ question_id }}" method="post">
+                    <label for="comment"></label>
+                    <textarea name="comment" id="comment" rows="7" cols="80"  placeholder="Comment"></textarea>
+                    <button class="button-label" type="submit">SAVE COMMENT</button>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

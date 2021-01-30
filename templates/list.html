@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Questions List</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+
+    <body>
+
+        <div class="header">
+
+            <div class="title">
+                SERVER  M8
+            </div>
+
+            <div class="navigation-buttons">
+                <form id="searcher" action="/search?q=<search phrase>" method="get">
+                    <input id="search-phrase" type="text" placeholder="Search..." name="search-phrase">
+                    <button id="search-button" type="submit"><i class="fa fa-search"></i></button>
+                </form>
+                <form action="/add-question" method="post">
+                    <button id="add-question" type="submit">ADD NEW QUESTION</button>
+                </form>
+                <form action="/list" method="get">
+                    <button id="lister" type="submit">LIST ALL QUESTIONS</button>
+                </form>
+            </div>
+
+        </div>
+        
+        <div class="list">
+            
+            
+            <div class="table">
+                <table>
+                    <tr>
+                        <th id="id-head">
+                            ID
+                            <button class="arrow_up" onclick="window.location.href='/sort?sort=id&dir=asc';">&#9650</button>
+                            <button class="arrow_down" onclick="window.location.href='/sort?sort=id&dir=desc';">&#9660</button>
+                        </th>
+                        <th id="title-head">
+                            TITLE
+                            <button class="arrow_up" onclick="window.location.href='/sort?sort=title&dir=asc';">&#9650</button>
+                            <button class="arrow_down" onclick="window.location.href='/sort?sort=title&dir=desc';">&#9660</button>
+                        </th>
+                        <th id="question-head">
+                            QUESTION
+                            <button class="arrow_up" onclick="window.location.href='/sort?sort=message&dir=asc';">&#9650</button>
+                            <button class="arrow_down" onclick="window.location.href='/sort?sort=message&dir=desc';">&#9660</button>
+                        </th>
+                        <th id="visitors-head">
+                            VISIT
+                            <button class="arrow_up" onclick="window.location.href='/sort?sort=view_number&dir=asc';">&#9650</button>
+                            <button class="arrow_down" onclick="window.location.href='/sort?sort=view_number&dir=desc';">&#9660</button>
+                        </th>
+                        <th id="votes-head">
+                            VOTES
+                            <button class="arrow_up" onclick="window.location.href='/sort?sort=vote_number&dir=asc';">&#9650</button>
+                            <button class="arrow_down" onclick="window.location.href='/sort?sort=vote_number&dir=desc';">&#9660</button>
+                        </th>
+                    </tr>
+                    {% for quest in questions %}
+                    <tr>
+                        <td align="center">
+                            {{ quest["id"] }}
+                        </td>
+                        <td class="question-link">
+                            <a href="/visitor/{{quest['id']}}">{{ quest["title"] }}</a>
+                        </td>
+                        <td>
+                            {{ quest["message"] }}
+                        </td>
+                        <td align="center">
+                            {{ quest["view_number"] }}
+                        </td>
+                        <td align="center">
+                            <div class="voter">
+                                <button onclick="window.location.href='/question/{{quest['id']}}/vote_up';" class="vote_arrow_up" type="submit"></button>
+                                <button onclick="window.location.href='/question/{{quest['id']}}/vote_down';" class="vote_arrow_down" type="submit"></button>
+                                <div class="count">
+                                    <div class="number">{{ quest["vote_number"] }}</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+        </div>
+
+    </body>
+</html>
