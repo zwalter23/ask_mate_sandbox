@@ -1,6 +1,7 @@
 body {
     background-image: url('/static/img/background/wallhaven-newlpr.jpg');
     width: 90%;
+    margin-top: 0px;
     margin-left: auto;
     margin-right: auto;
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;}
@@ -32,7 +33,7 @@ body {
     position: relative;
     display: flex;
     justify-content: space-between;
-    width: 700px;
+    width: 900px;
     right: 60px;
     top: 60px;}
 
@@ -50,8 +51,15 @@ body {
     left: 3px;
     padding: 40px;}
 
+.login-notifier {
+    color: white;
+    position: relative;
+    font-size: 15px;
+}
 
-#showmore-a, #showmore, #add-question, #search-button, #lister, .home-button, .button-label, #question-comments {
+
+
+#showmore-a, #showmore, #add-question, #search-button, #lister, .home-button, .button-label, #question-comments, #register, #login {
     display: inline;
     background: #a71b1b;
     text-shadow: none;
@@ -81,7 +89,7 @@ body {
 #search-button {
     float: left;}
 
-.button-small:hover, #showmore-a:hover, #showmore:hover , #add-question:hover, #search-button:hover, #lister:hover, .button:hover, .button-label:hover , .home-button:hover {
+.button-small:hover, #showmore-a:hover, #login:hover, #showmore:hover , #add-question:hover, #search-button:hover, #lister:hover, .button:hover, .button-label:hover , .home-button:hover , #register:hover {
     background-color: white;
     color: black;
     opacity: 0.4;}
@@ -285,8 +293,7 @@ li {
     list-style-type: none;
     display: flex;
     align-items: flex-start;
-    justify-content: flex-start;
-    }
+    justify-content: flex-start;}
 
 
 .container2 {
@@ -294,8 +301,7 @@ li {
     display: flex;
     position:relative;
     align-items: flex-end;
-    justify-content: flex-end;
-    }
+    justify-content: flex-end;}
 
 .container3 {
     list-style-type: none;
@@ -305,14 +311,12 @@ li {
     justify-content: space-between;
     width: 500px;
     top: 10px;
-    left: 1085px;
-    }
+    left: 1085px;}
 
 .header2 {
     background-color: black;
     opacity: 0.8;
-    display: flex;
-}
+    display: flex;}
 
 .button-small {
     display: inline;
@@ -327,11 +331,10 @@ li {
     opacity: 0.8;
     text-align: center;
     transition: 0.5s;}
-}
+
 
 .tired {
-    padding: 80px;
-}
+    padding: 80px;}
 
 .holder3 {
     position: relative;
@@ -342,4 +345,14 @@ li {
     line-height: 20px;
     left: 200px;
     padding: 0 40px 0 40px;}
+
+.signup-container {
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top : 80px;
 }
+
+
+
+

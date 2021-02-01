@@ -13,6 +13,11 @@
 
             <div class="title">
                 SERVER  M8
+            <div class="login-notifier">
+                    {% if user %}
+                        You are logged in as {{ user }}!
+                    {% endif %}
+            </div>
             </div>
 
             <div class="navigation-buttons">
@@ -26,10 +31,17 @@
                 <form action="/list" method="get">
                     <button id="lister" type="submit">LIST ALL QUESTIONS</button>
                 </form>
+                <form action="/registration" method="get">
+                    <button id="register" type="submit">SIGN UP</button>
+                </form>
+                <form action="/login" method="get">
+                    <button id="login" type="submit">LOG IN</button>
+                </form>
+
             </div>
 
         </div>
-        
+
         <div class="list">
             
             

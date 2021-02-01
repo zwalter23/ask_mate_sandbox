@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+  <title>Register</title>
+</head>
+<body>
+    <div class="login-container">
+      <form action="/login" method="POST">
+        <div>
+          <label for="email">Email</label>
+          <input type="text" name="email" placeholder=""/>
+        </div>
+        <div>
+          <label for="password">Password</label>
+          <input type="text" name="password" placeholder=""/>
+        </div>
+        <button>LOG IN</button>
+      </form>
+    </div>
+</body>
+</html>

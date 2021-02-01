@@ -1,5 +1,6 @@
 import os
 import re
+import bcrypt
 from psycopg2.extras import RealDictCursor
 import connect_database
 
@@ -178,6 +179,22 @@ def search_text(cursor: RealDictCursor, text):
     return questions, answers
 
 
+@connect_database.connection_handler
+def new_user(cursor: RealDictCursor, email, password, registration_time):
+    cursor.execute(f"""
+                        INSERT INTO users (email, password_hash, registration_time)
+                        VALUES ('{email}','{password}','{registration_time}')
+                        """)
+
+
+@connect_database.connection_handler
+def get_users(cursor: RealDictCursor):
+    cursor.execute(f"SELECT * FROM users;")
+    users = cursor.fetchall()
+    return users
+
+
+
 def highlight(text, question, answer):
     for quest in question:
         if re.findall(text, quest['title']):
@@ -200,3 +217,14 @@ def highlight(text, question, answer):
 def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def hash_password(plain_text_password):
+    # By using bcrypt, the salt is saved into the hash itself
+    hashed_bytes = bcrypt.hashpw(plain_text_password.encode('utf-8'), bcrypt.gensalt())
+    return hashed_bytes.decode('utf-8')
+#print(hash_password('qwe'))
+
+def verify_password(plain_text_password, hashed_password):
+    hashed_bytes_password = hashed_password.encode('utf-8')
+    return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_bytes_password)
+

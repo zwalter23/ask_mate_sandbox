@@ -1,18 +1,4 @@
-<<<<<<< HEAD
-from flask import Flask
-
-app = Flask(__name__)
-
-
-@app.route("/")
-def hello():
-    return "Hello World!"
-
-
-if __name__ == "__main__":
-    app.run()
-=======
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session
 from datetime import datetime
 import os
 import data_handler
@@ -22,6 +8,7 @@ app = Flask(__name__)
 UPLOAD_FOLDER = 'static/img'
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = {'png', 'jpg'}
+app.secret_key = 'abracadabra'
 
 
 @app.route("/list")
@@ -33,6 +20,12 @@ def list_default():
 @app.route("/")
 def list_last_5():
     question = data_handler.reader("question")[:5]
+    if 'email' in session:
+        for user in data_handler.get_users():
+            if user['email'] == session ['email']:
+                valid = data_handler.verify_password(session['password'],user['password_hash'])
+                if valid:
+                    return render_template("list.html", questions=question, user=session['email'])
     return render_template("list.html", questions=question)
 
 
@@ -246,6 +239,28 @@ def edit_comment(comment_id, question_id):
     return render_template("edit_comment.html", comment=comment, comment_id=int(comment_id), question_id=question_id)
 
 
+@app.route('/registration', methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+        hashed_password = data_handler.hash_password(password)
+        registration_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        data_handler.new_user(email, hashed_password, registration_time)
+        return redirect("/")
+    return render_template('signup.html')
+
+
+@app.route('/login', methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        session['email'] = request.form.get("email")
+        session['password'] = request.form.get("password")
+        return redirect("/")
+    return render_template('login.html')
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)
->>>>>>> sprint2/development
+
