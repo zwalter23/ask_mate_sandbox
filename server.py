@@ -14,7 +14,7 @@ app.secret_key = 'abracadabra'
 @app.route("/list")
 def list_default():
     question = data_handler.reader("question")
-    return render_template("list.html", questions=question)
+    return render_template("list.html", questions=question, user=session['email'])
 
 
 @app.route("/")
@@ -22,8 +22,8 @@ def list_last_5():
     question = data_handler.reader("question")[:5]
     if 'email' in session:
         for user in data_handler.get_users():
-            if user['email'] == session ['email']:
-                valid = data_handler.verify_password(session['password'],user['password_hash'])
+            if user['email'] == session['email']:
+                valid = data_handler.verify_password(session['password'], user['password_hash'])
                 if valid:
                     return render_template("list.html", questions=question, user=session['email'])
     return render_template("list.html", questions=question)
@@ -34,7 +34,7 @@ def search():
     text = request.query_string.decode().split("=")[1]
     questions, answers = data_handler.search_text(text)
     questions, answers = data_handler.highlight(text, questions, answers)
-    return render_template("search.html", questions=questions, answers=answers, text=text)
+    return render_template("search.html", questions=questions, answers=answers, text=text, user=session['email'])
 
 
 @app.route("/visitor/<question_id>")
@@ -49,12 +49,12 @@ def quest(question_id):
     question = data_handler.reader("question")
     answer = data_handler.reader("answer")
     comment = data_handler.reader("comment")
-    return render_template("question.html", question=question, answer=answer, comment=comment, tags=tags, id=int(question_id))
+    return render_template("question.html", question=question, answer=answer, comment=comment, tags=tags, id=int(question_id), user=session['email'])
 
 
 @app.route("/add-question", methods=["GET", "POST"])
 def add_question():
-    return render_template("add_question.html")
+    return render_template("add_question.html", user=session['email'])
 
 
 @app.route("/question/<question_id>/new-answer", methods=["GET", "POST"])
@@ -62,7 +62,7 @@ def new_answer(question_id):
     questions = data_handler.reader("question")
     for row in questions:
         if row["id"] == int(question_id):
-            return render_template("new_answer.html", question=row, id=int(question_id))
+            return render_template("new_answer.html", question=row, id=int(question_id), user=session['email'])
 
 
 @app.route("/save_answer/<question_id>", methods=["GET", "POST"])
@@ -97,7 +97,7 @@ def save():
 @app.route("/question/<question_id>/edit")
 def edit_question(question_id):
     question = data_handler.reader("question")
-    return render_template("edit.html", question=question, id=int(question_id))
+    return render_template("edit.html", question=question, id=int(question_id), user=session['email'])
 
 
 @app.route("/edit/<id>", methods=["GET", "POST"])
@@ -123,7 +123,7 @@ def edit_answer(answer_id, question_id):
         print("DATACHECK:", question_id)
         return redirect(f"/question/{question_id}")
     answer = data_handler.get_answer(answer_id)[0]['message']
-    return render_template("edit_answer.html", answer=answer, answer_id=int(answer_id), question_id=int(question_id))
+    return render_template("edit_answer.html", answer=answer, answer_id=int(answer_id), question_id=int(question_id), user=session['email'])
 
 
 @app.route("/answer/<answer_id>/delete/<question_id>", methods=["GET", "POST"])
@@ -165,7 +165,7 @@ def add_tag_to_question(question_id):
     question = data_handler.get_question(question_id)
     question_tag = data_handler.get_question_tags(question_id)
     tags = data_handler.reader("tag")
-    return render_template("new_tag.html", tags=tags, id=question_id, question=question, question_tag=question_tag)
+    return render_template("new_tag.html", tags=tags, id=question_id, question=question, question_tag=question_tag, user=session['email'])
 
 
 @app.route("/delete-tag/<question_id>")
@@ -198,7 +198,7 @@ def delete_one_tag(question_id, tag_id):
 @app.route("/sort", methods=["GET", "POST"])
 def sort():
     sorting = data_handler.sort(request.query_string.decode())
-    return render_template("list.html", questions=sorting)
+    return render_template("list.html", questions=sorting, user=session['email'])
 
 
 @app.route("/comment/<question_id>/add", methods=["GET", "POST"])
@@ -209,7 +209,7 @@ def add_question_comment(question_id):
                 "submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "edited_count": 0}
         data_handler.writer(data, "comment")
         return redirect(f"/question/{question_id}")
-    return render_template("add_comment.html", id=int(question_id))
+    return render_template("add_comment.html", id=int(question_id), user=session['email'])
 
 
 @app.route("/comment/<answer_id>/add/<question_id>", methods=["GET", "POST"])
@@ -220,7 +220,7 @@ def add_answer_comment(answer_id, question_id):
                 "submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "edited_count": 0}
         data_handler.writer(data, "comment")
         return redirect(f"/question/{question_id}")
-    return render_template("add_answer_comment.html", question_id=question_id, answer_id=answer_id)
+    return render_template("add_answer_comment.html", question_id=question_id, answer_id=answer_id, user=session['email'])
 
 
 @app.route("/comment/<comment_id>/delete/<question_id>")
@@ -236,7 +236,7 @@ def edit_comment(comment_id, question_id):
         data_handler.update(data, "comment")
         return redirect(f"/question/{question_id}")
     comment = data_handler.reader("comment")
-    return render_template("edit_comment.html", comment=comment, comment_id=int(comment_id), question_id=question_id)
+    return render_template("edit_comment.html", comment=comment, comment_id=int(comment_id), question_id=question_id, user=session['email'])
 
 
 @app.route('/registration', methods=["GET", "POST"])
@@ -259,6 +259,11 @@ def login():
         return redirect("/")
     return render_template('login.html')
 
+
+@app.route('/logout', methods=["GET", "POST"])
+def logout():
+    session.pop('email', None)
+    return redirect("/")
 
 
 if __name__ == "__main__":

@@ -59,7 +59,7 @@ body {
 
 
 
-#showmore-a, #showmore, #add-question, #search-button, #lister, .home-button, .button-label, #question-comments, #register, #login {
+#showmore-a, #showmore, #add-question, #search-button, #lister, .home-button, .button-label, #question-comments, #register, #login, #logout {
     display: inline;
     background: #a71b1b;
     text-shadow: none;
@@ -89,7 +89,9 @@ body {
 #search-button {
     float: left;}
 
-.button-small:hover, #showmore-a:hover, #login:hover, #showmore:hover , #add-question:hover, #search-button:hover, #lister:hover, .button:hover, .button-label:hover , .home-button:hover , #register:hover {
+.button-small:hover, #showmore-a:hover, #login:hover, #showmore:hover ,
+#add-question:hover, #search-button:hover, #lister:hover, .button:hover,
+.button-label:hover , .home-button:hover , #register:hover , #logout:hover {
     background-color: white;
     color: black;
     opacity: 0.4;}

@@ -31,13 +31,18 @@
                 <form action="/list" method="get">
                     <button id="lister" type="submit">LIST ALL QUESTIONS</button>
                 </form>
+                {%  if not user %}
                 <form action="/registration" method="get">
                     <button id="register" type="submit">SIGN UP</button>
                 </form>
                 <form action="/login" method="get">
                     <button id="login" type="submit">LOG IN</button>
                 </form>
-
+                {% else %}
+                <form action="/logout" method="get">
+                    <button id="logout" type="submit">LOG OUT</button>
+                </form>
+                {% endif %}
             </div>
 
         </div>
