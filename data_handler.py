@@ -182,8 +182,8 @@ def search_text(cursor: RealDictCursor, text):
 @connect_database.connection_handler
 def new_user(cursor: RealDictCursor, email, password, registration_time):
     cursor.execute(f"""
-                        INSERT INTO users (email, password_hash, registration_time)
-                        VALUES ('{email}','{password}','{registration_time}')
+                        INSERT INTO users (email, password_hash, registration_time, question_count, answer_count, comment_count, reputation )
+                        VALUES ('{email}','{password}','{registration_time}','0','0','0','0')
                         """)
 
 

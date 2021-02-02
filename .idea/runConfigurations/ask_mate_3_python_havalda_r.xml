@@ -5,6 +5,10 @@
     <option name="PARENT_ENVS" value="true" />
     <envs>
       <env name="PYTHONUNBUFFERED" value="1" />
+      <env name="PSQL_USER_NAME" value="zwalter23" />
+      <env name="PSQL_PASSWORD" value="electro421" />
+      <env name="PSQL_HOST" value="localhost" />
+      <env name="PSQL_DB_NAME" value="master_sample_database" />
     </envs>
     <option name="SDK_HOME" value="" />
     <option name="WORKING_DIRECTORY" value="" />
