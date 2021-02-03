@@ -75,7 +75,7 @@ def save_answer(question_id):
             f.save(os.path.join(app.config['UPLOAD_FOLDER'], "answer", f.filename))
         new_answer = {"submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "vote_number": 0,
                       "question_id": question_id, "message": answer, "image": f.filename, "email": session['email']}
-        data_handler.counter({data_handler.reader('answer')[0]['id']}, "answer")
+        data_handler.counter_plus({data_handler.reader('answer')[0]['id']}, "answer")
         data_handler.writer(new_answer, "answer")
     return redirect(f"/question/{question_id}")
 
@@ -91,7 +91,7 @@ def save():
             f.save(os.path.join(app.config['UPLOAD_FOLDER'], "question", f.filename))
         question = {"submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "view_number": 0,
                     "vote_number": 0, "title": title, "message": message, "image": f.filename, "email": session['email']}
-        data_handler.counter({data_handler.reader('question')[0]['id']},"question")
+        data_handler.counter_plus({data_handler.reader('question')[0]['id']},"question")
         data_handler.writer(question, "question")
     return redirect(f"/question/{data_handler.reader('question')[0]['id']}")
 
@@ -113,6 +113,7 @@ def edit_quest(id):
 
 @app.route("/question/<question_id>/delete", methods=["GET", "POST"])
 def delete_question(question_id):
+    data_handler.counter_minus({data_handler.reader('question')[0]['id']}, "question")
     data_handler.delete(question_id)
     return redirect("/")
 
@@ -130,6 +131,7 @@ def edit_answer(answer_id, question_id):
 
 @app.route("/answer/<answer_id>/delete/<question_id>", methods=["GET", "POST"])
 def delete_answer(answer_id, question_id):
+    data_handler.counter_minus({data_handler.reader('answer')[0]['id']}, "answer")
     data_handler.delete_answer(answer_id)
     return redirect(f"/question/{question_id}")
 
@@ -214,7 +216,7 @@ def add_question_comment(question_id):
         data = {"question_id": question_id, "answer_id": 'NULL', "message": comment,
                 "submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "edited_count": 0, "email": session['email']}
         data_handler.writer(data, "comment")
-        data_handler.counter({data_handler.reader('comment')[0]['id']}, "comment")
+        data_handler.counter_plus({data_handler.reader('comment')[0]['id']}, "comment")
         return redirect(f"/question/{question_id}")
     return render_template("add_comment.html", id=int(question_id), user=session['email'])
 
@@ -226,13 +228,14 @@ def add_answer_comment(answer_id, question_id):
         data = {"question_id": 'NULL', "answer_id": answer_id, "message": comment,
                 "submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "edited_count": 0, "email": session['email']}
         data_handler.writer(data, "comment")
-        data_handler.counter({data_handler.reader('comment')[0]['id']}, "comment")
+        data_handler.counter_plus({data_handler.reader('comment')[0]['id']}, "comment")
         return redirect(f"/question/{question_id}")
     return render_template("add_answer_comment.html", question_id=question_id, answer_id=answer_id, user=session['email'])
 
 
 @app.route("/comment/<comment_id>/delete/<question_id>")
 def delete_comment(comment_id, question_id):
+    data_handler.counter_minus({data_handler.reader('comment')[0]['id']}, "comment")
     data_handler.delete_comment(comment_id)
     return redirect(f"/question/{question_id}")
 

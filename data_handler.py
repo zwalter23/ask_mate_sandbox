@@ -129,8 +129,14 @@ def reputation(cursor: RealDictCursor, id, table, modify):
 
 
 @connect_database.connection_handler
-def counter(cursor: RealDictCursor, id, table):
+def counter_plus(cursor: RealDictCursor, id, table):
     cursor.execute(f"UPDATE users SET {table}_count = {table}_count + 1  FROM {table} WHERE users.email={table}.email  AND {table}.id = {reader(table)[0]['id']}")
+
+
+@connect_database.connection_handler
+def counter_minus(cursor: RealDictCursor, id, table):
+    cursor.execute(f"UPDATE users SET {table}_count = {table}_count - 1  FROM {table} WHERE users.email={table}.email  AND {table}.id = {reader(table)[0]['id']}")
+
 
 
 @connect_database.connection_handler
@@ -157,14 +163,14 @@ def delete(cursor: RealDictCursor, image_id):
             os.remove(f"static/img/question/{quest_img}")
     except:
         print("No image")
-    cursor.execute(f"DELETE FROM comment WHERE question_id = {id}")
-    cursor.execute(f"SELECT id FROM answer WHERE question_id = {id}")
+    cursor.execute(f"DELETE FROM comment WHERE question_id = {image_id}")
+    cursor.execute(f"SELECT id FROM answer WHERE question_id = {image_id}")
     answer_id = cursor.fetchall()
     if answer_id:
         for i in range(len(answer_id)):
             ans_id = [num for num in answer_id][i]['id']
             delete_answer(ans_id)
-    cursor.execute(f"DELETE FROM question  WHERE id = {id}")
+    cursor.execute(f"DELETE FROM question  WHERE id = {image_id}")
 
 
 @connect_database.connection_handler
