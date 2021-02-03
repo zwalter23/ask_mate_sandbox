@@ -74,7 +74,8 @@ def save_answer(question_id):
             f.filename = "id"+str(id)+f.filename
             f.save(os.path.join(app.config['UPLOAD_FOLDER'], "answer", f.filename))
         new_answer = {"submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "vote_number": 0,
-                      "question_id": question_id, "message": answer, "image": f.filename}
+                      "question_id": question_id, "message": answer, "image": f.filename, "email": session['email']}
+        data_handler.counter({data_handler.reader('answer')[0]['id']}, "answer")
         data_handler.writer(new_answer, "answer")
     return redirect(f"/question/{question_id}")
 
@@ -89,7 +90,8 @@ def save():
             f.filename = "id"+str(id)+f.filename
             f.save(os.path.join(app.config['UPLOAD_FOLDER'], "question", f.filename))
         question = {"submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "view_number": 0,
-                    "vote_number": 0, "title": title, "message": message, "image": f.filename}
+                    "vote_number": 0, "title": title, "message": message, "image": f.filename, "email": session['email']}
+        data_handler.counter({data_handler.reader('question')[0]['id']},"question")
         data_handler.writer(question, "question")
     return redirect(f"/question/{data_handler.reader('question')[0]['id']}")
 
@@ -135,24 +137,28 @@ def delete_answer(answer_id, question_id):
 @app.route("/question/<question_id>/vote_down", methods=["GET", "POST"])
 def vote_down(question_id):
     data_handler.vote(question_id, "question", "-")
+    data_handler.reputation(question_id, "question", "-")
     return redirect("/list")
 
 
 @app.route("/question/<question_id>/vote_up", methods=["GET", "POST"])
 def vote_up(question_id):
     data_handler.vote(question_id, "question", "+")
+    data_handler.reputation(question_id, "question", "+")
     return redirect("/list")
 
 
 @app.route("/answer/<answer_id>/vote_down/<question_id>", methods=["GET", "POST"])
 def answer_vote_down(answer_id, question_id):
     data_handler.vote(answer_id, "answer", "-")
+    data_handler.reputation(answer_id, "answer", "-")
     return redirect(f"/question/{question_id}")
 
 
 @app.route("/answer/<answer_id>/vote_up/<question_id>", methods=["GET", "POST"])
 def answer_vote_up(answer_id, question_id):
     data_handler.vote(answer_id, "answer", "+")
+    data_handler.reputation(answer_id, "answer", "+")
     return redirect(f"/question/{question_id}")
 
 
@@ -206,8 +212,9 @@ def add_question_comment(question_id):
     if request.method == "POST":
         comment = request.form.get('comment')
         data = {"question_id": question_id, "answer_id": 'NULL', "message": comment,
-                "submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "edited_count": 0}
+                "submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "edited_count": 0, "email": session['email']}
         data_handler.writer(data, "comment")
+        data_handler.counter({data_handler.reader('comment')[0]['id']}, "comment")
         return redirect(f"/question/{question_id}")
     return render_template("add_comment.html", id=int(question_id), user=session['email'])
 
@@ -217,8 +224,9 @@ def add_answer_comment(answer_id, question_id):
     if request.method == "POST":
         comment = request.form.get('comment')
         data = {"question_id": 'NULL', "answer_id": answer_id, "message": comment,
-                "submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "edited_count": 0}
+                "submission_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "edited_count": 0, "email": session['email']}
         data_handler.writer(data, "comment")
+        data_handler.counter({data_handler.reader('comment')[0]['id']}, "comment")
         return redirect(f"/question/{question_id}")
     return render_template("add_answer_comment.html", question_id=question_id, answer_id=answer_id, user=session['email'])
 

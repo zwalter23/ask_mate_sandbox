@@ -11,18 +11,18 @@ ALLOWED_EXTENSIONS = {'png', 'jpg'}
 def writer(cursor: RealDictCursor, data, table):
     if table == 'question':
         cursor.execute(f"""
-                            INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
-                            VALUES ('{data['submission_time']}', '{data['view_number']}', '{data['vote_number']}', '{data['title']}', '{data['message']}', '{data['image']}')
+                            INSERT INTO question (submission_time, view_number, vote_number, title, message, image, email)
+                            VALUES ('{data['submission_time']}', '{data['view_number']}', '{data['vote_number']}', '{data['title']}', '{data['message']}', '{data['image']}', '{data['email']}')
                         """)
     elif table == 'answer':
         cursor.execute(f"""
-                            INSERT INTO answer (submission_time, vote_number, question_id, message, image)
-                            VALUES('{data['submission_time']}', '{data['vote_number']}', '{data['question_id']}', '{data['message']}', '{data['image']}')
+                            INSERT INTO answer (submission_time, vote_number, question_id, message, image, email)
+                            VALUES('{data['submission_time']}', '{data['vote_number']}', '{data['question_id']}', '{data['message']}', '{data['image']}', '{data['email']}')
                         """)
     elif table == 'comment':
         cursor.execute(f"""
-                            INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count)
-                            VALUES({data['question_id']}, {data['answer_id']}, '{data['message']}', '{data['submission_time']}',  '{data['edited_count']}')
+                            INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count, email)
+                            VALUES({data['question_id']}, {data['answer_id']}, '{data['message']}', '{data['submission_time']}',  '{data['edited_count']}', '{data['email']}')
                         """)
 
 
@@ -121,6 +121,16 @@ def vote(cursor: RealDictCursor, column_id, table, modify):
                         SET vote_number = vote_number {modify} 1
                         WHERE id = '{column_id}'
                     """)
+
+
+@connect_database.connection_handler
+def reputation(cursor: RealDictCursor, id, table, modify):
+    cursor.execute(f"UPDATE users SET reputation = reputation {modify} 1 FROM {table} WHERE users.email={table}.email AND {table}.id = {id} ")
+
+
+@connect_database.connection_handler
+def counter(cursor: RealDictCursor, id, table):
+    cursor.execute(f"UPDATE users SET {table}_count = {table}_count + 1  FROM {table} WHERE users.email={table}.email  AND {table}.id = {reader(table)[0]['id']}")
 
 
 @connect_database.connection_handler
